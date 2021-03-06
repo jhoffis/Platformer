@@ -4,8 +4,6 @@
 #include <src/engine/utils/Timer.h>
 //#include <src/scenes/SceneHandler.h>
 #include <vector>
-#include <src/engine/io/InputHandler.h>
-#include <src/elem/interactions/TopbarInteraction.h>
 
 
 //void processInput(GLFWwindow *window)
@@ -21,20 +19,26 @@ int main() {
 
     //nk_init_fixed(&ctx, calloc(1, MAX_MEMORY), MAX_MEMORY, &font);
 
-    /*
-     * Topbars
-     */
-    TopbarInteraction topbarTransparent(window);
-    topbarTransparent.heightRatio = 18;
-
-//    RegularTopbar regularTopbar = new RegularTopbar(features, minimizeButton, closeButton, topbar);
-//    LobbyTopbar lobbyTopbar = new LobbyTopbar(features, minimizeButton, closeButton, new TopbarInteraction(window));
 /*
-    std::vector<SceneEnvir> scenes;
-    SceneHandler sceneHandler(scenes, topbarTransparent);
-
-    SetupInputs(sceneHandler, window.getWindow());
+    glfwSetKeyCallback(window.getWindow(), [](auto window, auto key, auto scancode, auto action, auto mods) {
+        _sceneHandler->keyInput(key, action);
+    });
 */
+
+    static float x, y;
+    glfwSetMouseButtonCallback(window.getWindow(), [](auto window, auto button, auto action, auto mods) {
+       /* if (action != GLFW_RELEASE) {
+            topbarTransparent.press(x, y);
+        } else {
+            topbarTransparent.release();
+        }*/
+    });
+    glfwSetCursorPosCallback(window.getWindow(), [](auto window, auto xpos, auto ypos) {
+        x = xpos;
+        y = ypos;
+        //topbarTransparent.move(x, y);
+    });
+
     // Run the game
     bool running = true;
     while(running)

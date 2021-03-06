@@ -21,10 +21,7 @@ add_executable(${PROJECT_NAME} src/main/Game.cpp src/main/Game.h
                                 #src/scenes/adt/NkContext.cpp src/scenes/adt/NkContext.h 
                                 #src/audio/AudioRemote.h
                                 src/engine/graphics/GameObject.cpp src/engine/graphics/GameObject.h
-                                src/elem/interactions/TopbarInteraction.cpp
-                                src/elem/interactions/TopbarInteraction.h
-                                src/engine/io/InputHandler.cpp src/engine/io/InputHandler.h 
-                                #src/scenes/regular/TestScene.cpp src/scenes/regular/TestScene.h)
+        #src/scenes/regular/TestScene.cpp src/scenes/regular/TestScene.h)
                                 )
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 include_directories( ${OPENGL_INCLUDE_DIRS} )

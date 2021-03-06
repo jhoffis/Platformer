@@ -57,7 +57,7 @@ Window::Window(bool fullscreen, bool vsync) {
     glfwDefaultWindowHints();
     glfwWindowHint(GLFW_VISIBLE, true);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-    glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+    glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -70,7 +70,7 @@ Window::Window(bool fullscreen, bool vsync) {
 //    int monitorCount = 0;
 //    GLFWmonitor **monitors = glfwGetMonitors(&monitorCount);
 
-    window = glfwCreateWindow(WIDTH, HEIGHT, "Racingmaybe", nullptr,nullptr);
+    window = glfwCreateWindow(WIDTH, HEIGHT, "Platformer", nullptr,nullptr);
     if (window == nullptr) {
         glfwTerminate();
         throw std::runtime_error("Failed to create the glfw window");
