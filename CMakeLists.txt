@@ -19,7 +19,7 @@ add_executable(${PROJECT_NAME} src/main/Game.cpp src/main/Game.h
                                 #src/engine/graphics/Renderer.cpp src/engine/graphics/Renderer.h 
                                 src/engine/graphics/Camera.cpp src/engine/graphics/Camera.h 
                                 #src/scenes/adt/NkContext.cpp src/scenes/adt/NkContext.h 
-                                src/audio/AudioRemote.h 
+                                #src/audio/AudioRemote.h
                                 src/engine/graphics/GameObject.cpp src/engine/graphics/GameObject.h
                                 src/elem/interactions/TopbarInteraction.cpp
                                 src/elem/interactions/TopbarInteraction.h
