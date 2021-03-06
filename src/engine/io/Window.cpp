@@ -84,7 +84,7 @@ Window::Window(bool fullscreen, bool vsync) {
     // ICON
 //    new Thread(()->
 //    {
-    /*
+
     const GLFWimage icon = createGLFWImage("pics/icon.png");
     glfwSetWindowIcon(window, 1, &icon);
 
@@ -98,7 +98,7 @@ Window::Window(bool fullscreen, bool vsync) {
     setCursor(CursorType::cursorNormal);
     mouseStateHide(false);
 //    }).start();
-*/
+
     // Get the thread stack and push a new frame
 //    try
 //    (MemoryStack
@@ -175,8 +175,9 @@ GLFWimage Window::createGLFWImage(const char *path) {
     int w;
     int h;
     int comp;
-    std::string currPath = std::filesystem::current_path().string().append("/../res/");
-    const char *realPath = reinterpret_cast<const char *>(currPath.append(path).c_str());
+    std::string currPath = "res/";  //std::filesystem::current_path().string().append("res/");
+    currPath.append(path);
+    const char *realPath = reinterpret_cast<const char *>(currPath.c_str());
     unsigned char *image = stbi_load(realPath, &w, &h, &comp, STBI_rgb_alpha);
     // TODO free stb images
 

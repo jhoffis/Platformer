@@ -15,6 +15,22 @@ enum CursorType {
 };
 
 class Window {
+private:
+
+    inline static bool focused;
+    // private Action closingProtocol;
+//private SceneHandler sceneHandler;
+    int fullscreen = -1;
+    GLFWwindow *window;
+    GLFWmonitor *monitor;
+    bool previousMouseStateVisible{};
+    GLFWcursor *cursorNormal, *cursorCanPoint, *cursorIsPoint, *cursorCanHold, *cursorIsHold;
+    CursorType cursorTypeSelected;
+//
+    void updateWithinWindow(int currWidth);
+    GLFWcursor *createCursor(const char *path, float xPercent);
+    GLFWimage createGLFWImage(const char *path);
+    GLFWmonitor * getCurrentMonitor(GLFWwindow *window, GLFWmonitor *monitor);
 
 public:
     inline static double WIDTH, HEIGHT;
@@ -34,22 +50,6 @@ public:
 //    bool isFocused() {
 //        return focused;
 //    }
-private:
-
-    inline static bool focused;
-    // private Action closingProtocol;
-//private SceneHandler sceneHandler;
-    int fullscreen = -1;
-    GLFWwindow *window;
-    GLFWmonitor *monitor;
-    bool previousMouseStateVisible{};
-    GLFWcursor *cursorNormal, *cursorCanPoint, *cursorIsPoint, *cursorCanHold, *cursorIsHold;
-    CursorType cursorTypeSelected;
-//
-    void updateWithinWindow(int currWidth);
-    GLFWcursor *createCursor(const char *path, float xPercent);
-    GLFWimage createGLFWImage(const char *path);
-    GLFWmonitor * getCurrentMonitor(GLFWwindow *window, GLFWmonitor *monitor);
 
 };
 

@@ -7,6 +7,8 @@ project ("Platformer")
 
 set(CMAKE_CXX_STANDARD 20)
 
+file(COPY res DESTINATION ${CMAKE_BUILD_RPATH}/res)
+
 # Include sub-projects.
 add_executable(${PROJECT_NAME} src/main/Game.cpp src/main/Game.h 
                                 src/glad.c 
