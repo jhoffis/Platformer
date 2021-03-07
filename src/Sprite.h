@@ -10,9 +10,16 @@
 
 class Sprite {
 private:
-    unsigned int shaderProgram, VBO, VAO;
+    unsigned int shaderProgram, VBO, VAO, EBO;
+    void createShader();
 public:
     Sprite();
+    ~Sprite() {
+        glDeleteVertexArrays(1, &VAO);
+        glDeleteBuffers(1, &VBO);
+        glDeleteBuffers(1, &EBO);
+        glDeleteProgram(shaderProgram);
+    }
     void render();
 };
 
