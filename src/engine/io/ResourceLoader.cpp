@@ -23,7 +23,7 @@ CharImage createCharImage(const char *path, bool flip) {
 void createGLImage(CharImage &img) {  // Kanskje jeg kan ta char * og kutte vekk alt etter x24 y24 etc?
     if (img.image)
     {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img.w, img.h, 0, (img.comp == 4 ? GL_RGBA : GL_RGB), GL_UNSIGNED_BYTE, img.image);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.w, img.h, 0, (img.comp == 4 ? GL_RGBA : GL_RGB), GL_UNSIGNED_BYTE, img.image);
         glGenerateMipmap(GL_TEXTURE_2D);
     }
     else

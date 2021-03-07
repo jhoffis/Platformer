@@ -12,7 +12,7 @@ private:
     unsigned int VBO{}, VAO{}, EBO{}, texture{};
 public:
     Shader shader;
-    explicit Sprite(const Shader &shader);
+    explicit Sprite(const Shader &shader, int pxX, int pxY, int pxW, int pxH);
     ~Sprite() {
         glDeleteVertexArrays(1, &VAO);
         glDeleteBuffers(1, &VBO);

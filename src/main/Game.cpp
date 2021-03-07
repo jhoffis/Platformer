@@ -20,8 +20,10 @@ int main() {
 
     //nk_init_fixed(&ctx, calloc(1, MAX_MEMORY), MAX_MEMORY, &font);
 
-    Sprite triangle(Shader("main"));
+    Sprite triangle(Shader("main"), 100, 100, 50, 50);
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
     glfwSetKeyCallback(window.getWindow(), [](auto window, auto key, auto scancode, auto action, auto mods) {

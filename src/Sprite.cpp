@@ -4,7 +4,7 @@
 
 #include "Sprite.h"
 
-Sprite::Sprite(const Shader &shader) : shader(shader) {
+Sprite::Sprite(const Shader &shader, int pxX, int pxY, int pxW, int pxH) : shader(shader) {
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
 
@@ -13,19 +13,19 @@ Sprite::Sprite(const Shader &shader) : shader(shader) {
     auto ww = Window::WIDTH;
     auto wh = Window::HEIGHT;
 
-    auto aspect = ww / wh;
+    auto realX = pxX / ww - 1.0f;
+    auto realY = 1.0f - pxY / wh;
+    auto realWidth = pxW / ww;
+    auto realHeight = pxH / wh;
 
-    float w = 24.0f / img.w;
-    float h = 24.0f / img.h;
-
-    float actualWidth = 1.0f / aspect;
-    float actualHeight = 1.0f;
+    float texW = 24.0f / img.w;
+    float texH = 24.0f / img.h;
 
     float vertices[] = {
-            actualWidth / 2.0f,   actualHeight / 2.0f,  0.0f, 1.0f, 0.0f, 0.0f,    w,    1.0f,          // oppe til høyre
-            actualWidth / 2.0f,  -actualHeight / 2.0f, 0.0f,  0.0f, 1.0f, 0.0f,   w,    1.0f - h,      // nede til høyre
-            -actualWidth / 2.0f, -actualHeight / 2.0f, 0.0f,  0.0f, 0.0f, 1.0f,   0.0f, 1.0f - h,      // nede til venstre
-            -actualWidth / 2.0f,  actualHeight / 2.0f, 0.0f,   0.5f, 0.5f, 1.0f,  0.0f, 1.0f,          // oppe til venstre
+            realX + realWidth / 2.0f, realY + realHeight / 2.0f,  0.0f, 1.0f, 0.0f, 0.0f,    texW,    1.0f,          // oppe til høyre
+            realX + realWidth / 2.0f, realY - realHeight / 2.0f, 0.0f,  0.0f, 1.0f, 0.0f,   texW,    1.0f - texH,      // nede til høyre
+            realX - realWidth / 2.0f, realY - realHeight / 2.0f, 0.0f,  0.0f, 0.0f, 1.0f,   0.0f, 1.0f - texH,      // nede til venstre
+            realX - realWidth / 2.0f, realY + realHeight / 2.0f, 0.0f,   0.5f, 0.5f, 1.0f,  0.0f, 1.0f,          // oppe til venstre
     };
     unsigned int indices[] = {  // note that we start from 0!
             0, 1, 3,   // first triangle
