@@ -1,9 +1,9 @@
 #include <Libraries/Nuklear/nuklear.h>
-#include <iostream>
+//#include <iostream>
 #include <src/engine/io/Window.h>
 #include <src/engine/utils/Timer.h>
 //#include <src/scenes/SceneHandler.h>
-#include <vector>
+//#include <vector>
 #include "src/Sprite.h"
 
 
@@ -20,11 +20,14 @@ int main() {
 
     //nk_init_fixed(&ctx, calloc(1, MAX_MEMORY), MAX_MEMORY, &font);
 
-/*
+    Sprite triangle(Shader("main"));
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+
+
     glfwSetKeyCallback(window.getWindow(), [](auto window, auto key, auto scancode, auto action, auto mods) {
-        _sceneHandler->keyInput(key, action);
+//        _sceneHandler->keyInput(key, action);
+        std::cout << "Key: " << key << std::endl;
     });
-*/
 
     static float x, y;
     glfwSetMouseButtonCallback(window.getWindow(), [](auto window, auto button, auto action, auto mods) {
@@ -39,8 +42,6 @@ int main() {
         y = ypos;
         //topbarTransparent.move(x, y);
     });
-
-    Sprite triangle;
 
     // Run the game
     bool running = true;
@@ -57,9 +58,10 @@ int main() {
 //        processInput(window.getWindow());
 
         glfwPollEvents();
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+
         glClear(GL_COLOR_BUFFER_BIT);
 
+//        triangle.shader.
         triangle.render();
 
         glfwSwapBuffers(window.getWindow());

@@ -23,7 +23,7 @@ add_executable(${PROJECT_NAME} src/main/Game.cpp src/main/Game.h
                                 #src/audio/AudioRemote.h
                                 src/engine/graphics/GameObject.cpp src/engine/graphics/GameObject.h
         #src/scenes/regular/TestScene.cpp src/scenes/regular/TestScene.h)
-        src/Sprite.cpp src/Sprite.h)
+        src/Sprite.cpp src/Sprite.h src/Shader.h src/Shader.cpp)
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 include_directories( ${OPENGL_INCLUDE_DIRS} )
 add_dependencies(${PROJECT_NAME} OpenGL::GL)

@@ -1,14 +1,10 @@
-in vec3 position;
-in vec2 textureCoord;
+in vec3 position;   // the position variable has attribute position 0
+in vec3 color; // the color variable has attribute position 1
+  
+out vec3 passColor; // output a color to the fragment shader
 
-out vec3 passColor;
-out vec2 passTextureCoord;
-
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
-
-void main() {
-	gl_Position = projection * view * model * vec4(position, 1.0);
-	passTextureCoord = textureCoord;
-}
+void main()
+{
+    gl_Position = vec4(position, 1.0);
+    passColor = color; // set ourColor to the input color we got from the vertex data
+}       

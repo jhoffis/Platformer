@@ -1,7 +1,7 @@
 #include <algorithm>
 #include "Window.h"
 #include <stb_image.h>
-#include <filesystem>
+#include <stdexcept>
 #include "src/main/Game.h"
 
 void glfwErrors(int error_code, const char *description) {

@@ -5,20 +5,19 @@
 #ifndef PLATFORMER_SPRITE_H
 #define PLATFORMER_SPRITE_H
 
-#include <glad/glad.h>
-#include <iostream>
+#include "Shader.h"
 
 class Sprite {
 private:
-    unsigned int shaderProgram, VBO, VAO, EBO;
-    void createShader();
+    unsigned int VBO{}, VAO{}, EBO{};
 public:
-    Sprite();
+    Shader shader;
+    explicit Sprite(const Shader &shader);
     ~Sprite() {
         glDeleteVertexArrays(1, &VAO);
         glDeleteBuffers(1, &VBO);
         glDeleteBuffers(1, &EBO);
-        glDeleteProgram(shaderProgram);
+        shader.destroy();
     }
     void render();
 };
