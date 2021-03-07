@@ -1,13 +1,12 @@
 ﻿# CMakeList.txt : Top-level CMake project file, do global configuration
 # and include sub-projects here.
 #
-cmake_minimum_required (VERSION 3.8)
+cmake_minimum_required (VERSION 3.16)
 
 project ("Platformer")
-
 set(CMAKE_CXX_STANDARD 20)
 
-file(COPY res DESTINATION ${CMAKE_BUILD_RPATH}/res)
+file(COPY ${CMAKE_SOURCE_DIR}/res DESTINATION ${PROJECT_BINARY_DIR})
 
 # Include sub-projects.
 add_executable(${PROJECT_NAME} src/main/Game.cpp src/main/Game.h 
@@ -24,7 +23,7 @@ add_executable(${PROJECT_NAME} src/main/Game.cpp src/main/Game.h
                                 #src/audio/AudioRemote.h
                                 src/engine/graphics/GameObject.cpp src/engine/graphics/GameObject.h
         #src/scenes/regular/TestScene.cpp src/scenes/regular/TestScene.h)
-                                )
+        src/Sprite.cpp src/Sprite.h)
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 include_directories( ${OPENGL_INCLUDE_DIRS} )
 add_dependencies(${PROJECT_NAME} OpenGL::GL)

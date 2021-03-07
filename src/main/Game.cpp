@@ -4,6 +4,7 @@
 #include <src/engine/utils/Timer.h>
 //#include <src/scenes/SceneHandler.h>
 #include <vector>
+#include "src/Sprite.h"
 
 
 //void processInput(GLFWwindow *window)
@@ -39,6 +40,8 @@ int main() {
         //topbarTransparent.move(x, y);
     });
 
+    Sprite triangle;
+
     // Run the game
     bool running = true;
     while(running)
@@ -56,6 +59,8 @@ int main() {
         glfwPollEvents();
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+
+        triangle.render();
 
         glfwSwapBuffers(window.getWindow());
     }

@@ -2,5 +2,4 @@
 .vs/*
 out/*
 cmake-build-debug/*
-Libraries/glfw-3.3.2/*
 Libraries/glm/*
