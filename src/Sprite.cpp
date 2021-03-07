@@ -7,11 +7,25 @@
 Sprite::Sprite(const Shader &shader) : shader(shader) {
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
+
+    auto img = createCharImage("GrassTiles.png", true);
+
+    auto ww = Window::WIDTH;
+    auto wh = Window::HEIGHT;
+
+    auto aspect = ww / wh;
+
+    float w = 24.0f / img.w;
+    float h = 24.0f / img.h;
+
+    float actualWidth = 1.0f / aspect;
+    float actualHeight = 1.0f;
+
     float vertices[] = {
-            0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,  // top right
-            0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f, 1.0f, 0.0f,// bottom right
-            -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f, 0.0f, 0.0f,// bottom left
-            -0.5f,  0.5f, 0.0f,   0.5f, 0.5f, 1.0f, 0.0f, 1.0f,// top left
+            actualWidth / 2.0f,   actualHeight / 2.0f,  0.0f, 1.0f, 0.0f, 0.0f,    w,    1.0f,          // oppe til høyre
+            actualWidth / 2.0f,  -actualHeight / 2.0f, 0.0f,  0.0f, 1.0f, 0.0f,   w,    1.0f - h,      // nede til høyre
+            -actualWidth / 2.0f, -actualHeight / 2.0f, 0.0f,  0.0f, 0.0f, 1.0f,   0.0f, 1.0f - h,      // nede til venstre
+            -actualWidth / 2.0f,  actualHeight / 2.0f, 0.0f,   0.5f, 0.5f, 1.0f,  0.0f, 1.0f,          // oppe til venstre
     };
     unsigned int indices[] = {  // note that we start from 0!
             0, 1, 3,   // first triangle
@@ -36,10 +50,10 @@ Sprite::Sprite(const Shader &shader) : shader(shader) {
 // set the texture wrapping/filtering options (on the currently bound texture object)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 // load and generate the texture
-    createGLImage("GrassTiles.png");
+    createGLImage(img);
 
     // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);

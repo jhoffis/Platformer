@@ -170,7 +170,7 @@ GLFWcursor *Window::createCursor(const char *path, float xPercent) {
 
 GLFWimage Window::createGLFWImage(const char *path) {
 
-    CharImage img = createCharImage(path);
+    CharImage img = createCharImage(path, false);
 
     GLFWimage resultImg;
     resultImg.width = img.w;

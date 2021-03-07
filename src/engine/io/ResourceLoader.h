@@ -15,6 +15,6 @@ struct CharImage {
     unsigned char *image;
 };
 
-CharImage createCharImage(const char *path);
-void createGLImage(const char *path);
+CharImage createCharImage(const char *path, bool flip);
+void createGLImage(CharImage &img);
 #endif //PLATFORMER_RESOURCELOADER_H
