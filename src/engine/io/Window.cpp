@@ -1,8 +1,5 @@
 #include <algorithm>
 #include "Window.h"
-#include <stb_image.h>
-#include <stdexcept>
-#include "src/main/Game.h"
 
 void glfwErrors(int error_code, const char *description) {
     throw std::runtime_error(std::string("GLFW ERROR: ").append(reinterpret_cast<const char *>(error_code)).append("\n").append(description));
@@ -64,7 +61,7 @@ Window::Window(bool fullscreen, bool vsync) {
 //    if (Platform.get() == Platform.MACOSX) {
 //        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 //    }
-    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, DEBUG ? GLFW_TRUE : GLFW_FALSE);
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 
     monitor = glfwGetPrimaryMonitor();
 //    int monitorCount = 0;
@@ -85,16 +82,16 @@ Window::Window(bool fullscreen, bool vsync) {
 //    new Thread(()->
 //    {
 
-    const GLFWimage icon = createGLFWImage("pics/icon.png");
+    const GLFWimage icon = createGLFWImage("icon.png");
     glfwSetWindowIcon(window, 1, &icon);
 
     // Cursor
-    cursorNormal = createCursor("pics/cursor.png", 0);
+    cursorNormal = createCursor("cursor.png", 0);
     float xPercentCursorHand = 0.27f;
-    cursorCanPoint = createCursor("pics/cursorCanPoint.png", xPercentCursorHand);
-    cursorIsPoint = createCursor("pics/cursorIsPoint.png", xPercentCursorHand);
-    cursorCanHold = createCursor("pics/cursorCanHold.png", xPercentCursorHand);
-    cursorIsHold = createCursor("pics/cursorIsHold.png", xPercentCursorHand);
+    cursorCanPoint = createCursor("cursorCanPoint.png", xPercentCursorHand);
+    cursorIsPoint = createCursor("cursorIsPoint.png", xPercentCursorHand);
+    cursorCanHold = createCursor("cursorCanHold.png", xPercentCursorHand);
+    cursorIsHold = createCursor("cursorIsHold.png", xPercentCursorHand);
     setCursor(CursorType::cursorNormal);
     mouseStateHide(false);
 //    }).start();
@@ -172,23 +169,14 @@ GLFWcursor *Window::createCursor(const char *path, float xPercent) {
 }
 
 GLFWimage Window::createGLFWImage(const char *path) {
-    int w;
-    int h;
-    int comp;
-    std::string currPath = "res/";  //std::filesystem::current_path().string().append("res/");
-    currPath.append(path);
-    const char *realPath = reinterpret_cast<const char *>(currPath.c_str());
-    unsigned char *image = stbi_load(realPath, &w, &h, &comp, STBI_rgb_alpha);
-    // TODO free stb images
 
-    if (image == nullptr)
-        throw std::runtime_error(std::string("Failed to load texture at ").append(realPath));
+    CharImage img = createCharImage(path);
 
     GLFWimage resultImg;
-    resultImg.width = w;
-    resultImg.height = h;
-    resultImg.pixels = image;
-
+    resultImg.width = img.w;
+    resultImg.height = img.h;
+    resultImg.pixels = img.image;
+//    stbi_image_free(img.image);
     return resultImg;
 }
 

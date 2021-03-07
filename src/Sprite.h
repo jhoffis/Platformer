@@ -5,11 +5,11 @@
 #ifndef PLATFORMER_SPRITE_H
 #define PLATFORMER_SPRITE_H
 
-#include "Shader.h"
+#include "src/engine/io/Window.h"
 
 class Sprite {
 private:
-    unsigned int VBO{}, VAO{}, EBO{};
+    unsigned int VBO{}, VAO{}, EBO{}, texture{};
 public:
     Shader shader;
     explicit Sprite(const Shader &shader);

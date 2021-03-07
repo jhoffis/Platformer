@@ -1,6 +1,6 @@
-#include <Libraries/Nuklear/nuklear.h>
+//#include <Libraries/Nuklear/nuklear.h>
 //#include <iostream>
-#include <src/engine/io/Window.h>
+//#include <src/engine/io/Window.h>
 #include <src/engine/utils/Timer.h>
 //#include <src/scenes/SceneHandler.h>
 //#include <vector>
@@ -12,7 +12,7 @@
 //    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 //        glfwSetWindowShouldClose(window, true);
 //}
-struct nk_context ctx;
+//struct nk_context ctx;
 
 int main() {
     // Setup
