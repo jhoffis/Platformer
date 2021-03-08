@@ -33,7 +33,7 @@ private:
     GLFWmonitor * getCurrentMonitor(GLFWwindow *window, GLFWmonitor *monitor);
 
 public:
-    inline static double WIDTH, HEIGHT;
+    inline static float WIDTH, HEIGHT;
     Window(bool fullscreen, bool vsync);
     ~Window();
     void setCursor(CursorType cursor);

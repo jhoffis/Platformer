@@ -6,9 +6,15 @@ layout (location = 2) in vec2 texCoord;
 out vec3 passColor; // output a color to the fragment shader
 out vec2 passTexCoord;
 
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+
 void main()
 {
-    gl_Position = vec4(position, 1.0);
+    gl_Position =
+//    projection * view *
+    model * view * vec4(position, 1.0);
     passColor = color; // set ourColor to the input color we got from the vertex data
     passTexCoord = texCoord;
 }       

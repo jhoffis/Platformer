@@ -1,10 +1,5 @@
-//#include <Libraries/Nuklear/nuklear.h>
-//#include <iostream>
-//#include <src/engine/io/Window.h>
 #include <src/engine/utils/Timer.h>
-//#include <src/scenes/SceneHandler.h>
-//#include <vector>
-#include "src/Sprite.h"
+#include "src/Map.h"
 
 
 //void processInput(GLFWwindow *window)
@@ -17,10 +12,13 @@
 int main() {
     // Setup
     Window window(false, false);
-
+    spriteUpdateTileSize();
+    static Camera camera;
     //nk_init_fixed(&ctx, calloc(1, MAX_MEMORY), MAX_MEMORY, &font);
 
-    Sprite triangle(Shader("main"), 100, 100, 50, 50);
+    mapCreate("GrassTiles.png", 24.0f);
+    Shader shader("main");
+
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -29,6 +27,22 @@ int main() {
     glfwSetKeyCallback(window.getWindow(), [](auto window, auto key, auto scancode, auto action, auto mods) {
 //        _sceneHandler->keyInput(key, action);
         std::cout << "Key: " << key << std::endl;
+
+        switch (key) {
+            case GLFW_KEY_UP:
+                camera.view = glm::translate(camera.view, glm::vec3(0, -0.1, 0));
+//                std::cout << "view: " << camera.view << std::endl;
+                break;
+            case GLFW_KEY_DOWN:
+                camera.view = glm::translate(camera.view, glm::vec3(0, 0.1, 0));
+                break;
+            case GLFW_KEY_LEFT:
+                camera.view = glm::translate(camera.view, glm::vec3(0.1, 0, 0));
+                break;
+            case GLFW_KEY_RIGHT:
+                camera.view = glm::translate(camera.view, glm::vec3(-0.1, 0, 0));
+                break;
+        }
     });
 
     static float x, y;
@@ -64,10 +78,19 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
 
 //        triangle.shader.
-        triangle.render();
+        for (auto tile : map.mapPointToTileIndices) {
+            map.palette.at(tile).render(camera, shader);
+        }
+//        triangle.render(camera);
+//        triangle2.render(camera);
+//        triangle3.render(camera);
+//        triangle4.render(camera);
 
         glfwSwapBuffers(window.getWindow());
     }
+
+    shader.destroy();
+    map.destroy();
 
     return 0;
 }

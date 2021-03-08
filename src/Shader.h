@@ -21,13 +21,12 @@ public:
     unsigned int ID;
 
     // constructor reads and builds the shader
-    Shader(const char* name);
-    void destroy() {
+    explicit Shader(const char* name);
+    void destroy() const {
         glDeleteProgram(ID);
     }
 
-    void use()
-    {
+    void use() const {
         glUseProgram(ID);
     }
 
@@ -42,6 +41,13 @@ public:
     void setFloat(const std::string &name, float value) const
     {
         glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+    }
+
+    void uniformMatrix4(auto mat4f, const char *location) {
+        int glslLocation = glGetUniformLocation(ID, location);
+        if (glslLocation == -1)
+            std::cout << "ERROR SHADER: " << location << std::endl;
+        glUniformMatrix4fv(glslLocation, 1, GL_FALSE, mat4f);
     }
 };
 
