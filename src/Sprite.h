@@ -9,7 +9,6 @@
 #include "src/Camera.h"
 
 static const float tileSize = 0.1f;
-inline float realTileWidth{}, realTileHeight{};
 
 void spriteUpdateTileSize();
 
@@ -18,19 +17,24 @@ private:
     unsigned int VBO{}, VAO{}, EBO{}, texture{};
     glm::vec3 modelPos{};
 
+    int tileX, tileY;
+
 public:
+
+    inline static float realTileWidth{}, realTileHeight{};
+
     Sprite(int tilemapX, int tilemapY, float texW, float texH, int tileX, int tileY, auto texture) {
         setPos(tileX, tileY);
         this->texture = texture;
 
         const auto realX = -1.0f;
-        const auto realY = -1.0f;
+        const auto realY = 1.0f;
 
         const float vertices[] = {
-                realX + realTileWidth / 2.0f, realY + realTileHeight / 2.0f,  0.0f, 1.0f, 0.0f, 0.0f,   (tilemapX + 1) * texW,    1.0f - tilemapY * texH,          // oppe til høyre
-                realX + realTileWidth / 2.0f, realY - realTileHeight / 2.0f, 0.0f,  0.0f, 1.0f, 0.0f,   (tilemapX + 1) * texW,    1.0f - (tilemapY + 1) * texH,      // nede til høyre
-                realX - realTileWidth / 2.0f, realY - realTileHeight / 2.0f, 0.0f,  0.0f, 0.0f, 1.0f,   tilemapX * texW,    1.0f - (tilemapY + 1) * texH,      // nede til venstre
-                realX - realTileWidth / 2.0f, realY + realTileHeight / 2.0f, 0.0f,   0.5f, 0.5f, 1.0f,  tilemapX * texW,    1.0f - tilemapY * texH,          // oppe til venstre
+                realX + realTileWidth,  realY,  0.0f, 1.0f, 0.0f, 0.0f,   (tilemapX + 1) * texW,    1.0f - tilemapY * texH,          // oppe til høyre
+                realX + realTileWidth , realY - realTileHeight, 0.0f,  0.0f, 1.0f, 0.0f,   (tilemapX + 1) * texW,    1.0f - (tilemapY + 1) * texH,      // nede til høyre
+                realX,                  realY - realTileHeight, 0.0f,  0.0f, 0.0f, 1.0f,   tilemapX * texW,    1.0f - (tilemapY + 1) * texH,      // nede til venstre
+                realX,                  realY, 0.0f,   0.5f, 0.5f, 1.0f,  tilemapX * texW,    1.0f - tilemapY * texH,          // oppe til venstre
         };
 
         unsigned int indices[] = {  // note that we start from 0!
@@ -75,14 +79,17 @@ public:
         glDeleteBuffers(1, &EBO);
     }
 
-    void render(const Camera &camera, Shader &shader);
+    void render(const glm::vec3 viewPos, Shader &shader, bool keepModelPos);
 
     void setPos(int tileX, int tileY) {
         // trenger ikke å bruke annet enn window aspect for å bestemme variasjon. Bruk så opengl størrelse for å si størresle på en tile.
+        this->tileX = tileX;
+        this->tileY = tileY;
         modelPos.x = (float) tileX * realTileWidth;
         modelPos.y = (float) tileY * realTileHeight;
     }
 
+    bool isAbove(glm::vec3 viewPos, int mX, int mY);
 };
 
 
