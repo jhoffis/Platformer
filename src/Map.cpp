@@ -78,14 +78,12 @@ void Map::removePalette(glm::vec3 &newTilePos) {
 }
 
 void Map::render(Camera &camera, Shader &shader) {
-        int i = 0;
-        for (Sprite tile : palette) {
-//            if (width == 0) {
-//                std::cout << "Can't divide by zero!\n" << "Error number: " << width << std::endl;
-//                break;
-//            }
-            tile.render(i % (int) width, i / (int) width, palettePos, shader);
-            i++;
+        if (editMode) {
+            int i = 0;
+            for (Sprite tile : palette) {
+                tile.render(i % (int) width, i / (int) width, palettePos, shader);
+                i++;
+            }
         }
         for (auto tile : mapOfTiles) {
             palette.at(tile.pointerToSprite).render(tile.x, tile.y, camera.pos, shader);

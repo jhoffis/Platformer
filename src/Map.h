@@ -27,6 +27,7 @@ struct Map {
     void render(Camera &camera, Shader &shader);
 };
 inline Map map{};
+inline bool editMode = true;
 
 
 #endif //PLATFORMER_MAP_H

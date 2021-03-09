@@ -23,25 +23,31 @@ int main() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-
     glfwSetKeyCallback(window.getWindow(), [](auto window, auto key, auto scancode, auto action, auto mods) {
 //        _sceneHandler->keyInput(key, action);
         std::cout << "Key: " << key << std::endl;
 
         if (action != GLFW_RELEASE) {
             switch (key) {
-                case GLFW_KEY_UP:
-                    camera.pos.y += 0.1;
+                case GLFW_KEY_F2:
+                    editMode = !editMode;
                     break;
-                case GLFW_KEY_DOWN:
-                    camera.pos.y -= 0.1;
-                    break;
-                case GLFW_KEY_LEFT:
-                    camera.pos.x += 0.1;
-                    break;
-                case GLFW_KEY_RIGHT:
-                    camera.pos.x -= 0.1;
-                    break;
+            }
+            if (editMode) {
+                switch (key) {
+                    case GLFW_KEY_UP:
+                        camera.pos.y += 0.1;
+                        break;
+                    case GLFW_KEY_DOWN:
+                        camera.pos.y -= 0.1;
+                        break;
+                    case GLFW_KEY_LEFT:
+                        camera.pos.x += 0.1;
+                        break;
+                    case GLFW_KEY_RIGHT:
+                        camera.pos.x -= 0.1;
+                        break;
+                }
             }
         }
     });
@@ -49,7 +55,8 @@ int main() {
     static float mX, mY;
     glfwSetMouseButtonCallback(window.getWindow(), [](auto window, auto button, auto action, auto mods) {
        if (action != GLFW_RELEASE) {
-           if (!map.selectPalette(button, mX, mY)) {
+
+           if (editMode && !map.selectPalette(button, mX, mY)) {
                auto pos = screenCoordToTilePos(mX, mY, camera.pos);
                switch (button) {
                    case GLFW_MOUSE_BUTTON_LEFT:
@@ -81,26 +88,16 @@ int main() {
             running = false;
             break;
         }
-//        steam.update();
-        //sceneHandler.tick(Timer::nowDelta());
-//        audio.checkMusic();
-
-//        processInput(window.getWindow());
-
         glfwPollEvents();
-
         glClear(GL_COLOR_BUFFER_BIT);
 
-//        triangle.shader.
+        // Render start
         map.render(camera, shader);
 
-        if (map.selectedSprite >= 0)
+        if (editMode && map.selectedSprite >= 0)
             map.palette.at(map.selectedSprite).render(mX, mY, shader);
-//        triangle.render(camera);
-//        triangle2.render(camera);
-//        triangle3.render(camera);
-//        triangle4.render(camera);
 
+        // Render end
         glfwSwapBuffers(window.getWindow());
     }
 
