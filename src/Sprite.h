@@ -15,9 +15,7 @@ void spriteUpdateTileSize();
 class Sprite {
 private:
     unsigned int VBO{}, VAO{}, EBO{}, texture{};
-
 public:
-
     inline static float realTileWidth{}, realTileHeight{};
 
     Sprite(int tilemapX, int tilemapY, float texW, float texH, auto texture) {
@@ -86,8 +84,10 @@ inline static const glm::vec3 screenCoordToTilePos(int mX, int mY, glm::vec3 &vi
 
     auto asd =  0.0f;
 
-    return glm::vec3( (int) (((float) mX * 2.0f / Window::WIDTH + asd - viewPos.x) / Sprite::realTileWidth),
+    auto pos = glm::vec3( (int) (((float) mX * 2.0f / Window::WIDTH + asd - viewPos.x) / Sprite::realTileWidth),
                       (int) (((float)mY * 2.0f / Window::HEIGHT + asd - viewPos.y) / Sprite::realTileHeight), 0);
+    std::cout << "Place X: " << pos.x << " Place Y: " << pos.y << std::endl;
+    return pos;
 }
 
 

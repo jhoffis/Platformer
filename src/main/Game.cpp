@@ -49,7 +49,17 @@ int main() {
     static float mX, mY;
     glfwSetMouseButtonCallback(window.getWindow(), [](auto window, auto button, auto action, auto mods) {
        if (action != GLFW_RELEASE) {
-           map.selectPalette(button, mX, mY, camera.pos);
+           if (!map.selectPalette(button, mX, mY)) {
+               auto pos = screenCoordToTilePos(mX, mY, camera.pos);
+               switch (button) {
+                   case GLFW_MOUSE_BUTTON_LEFT:
+                       map.placePalette(pos);
+                       break;
+                   case GLFW_MOUSE_BUTTON_RIGHT:
+                       map.removePalette(pos);
+                       break;
+               }
+           }
        }
        /*else {
             topbarTransparent.release();

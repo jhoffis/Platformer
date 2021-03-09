@@ -9,6 +9,7 @@
 
 struct Tile {
     int x, y;
+    bool collideTop{}, collideBot{}, collideLeft{}, collideRight{};
     unsigned int pointerToSprite;
 };
 
@@ -16,10 +17,12 @@ struct Map {
     int selectedSprite = -1;
     std::vector<Sprite> palette;
     glm::vec3 palettePos;
-    std::vector<Tile> mapPointToTileIndices;
+    std::vector<Tile> mapOfTiles;
     float width, height;
     void destroy();
-    void selectPalette(int button, int mX, int mY, glm::vec3 &viewPos);
+    bool selectPalette(int button, int mX, int mY);
+    void placePalette(glm::vec3 &newTilePos);
+    void removePalette(glm::vec3 &newTilePos);
     void create(const char *imgPath, float tilemapPixelSize);
     void render(Camera &camera, Shader &shader);
 };

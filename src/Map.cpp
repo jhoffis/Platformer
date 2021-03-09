@@ -28,7 +28,7 @@ void Map::create(const char *imgPath, float tilemapPixelSize) {
         int x = i % w;
         int y = i / w;
         palette.emplace_back(x, y, texW, texH, texture);
-//        map.mapPointToTileIndices.push_back(i);
+//        map.mapOfTiles.push_back(i);
     }
 
     width = w;
@@ -43,26 +43,38 @@ void Map::destroy() {
     }
 }
 
-void Map::selectPalette(int button, int mX, int mY, glm::vec3 &viewPos) {
-    if (selectedSprite >= 0 && button == GLFW_MOUSE_BUTTON_LEFT) {
-        Tile tile{};
-        auto pos = screenCoordToTilePos(mX, mY, viewPos);
-        std::cout << "Place X: " << pos.x << " Place Y: " << pos.y << std::endl;
-        tile.x = pos.x; // FIXME HM, her kan det bli overlapping av tiles.
-        tile.y = pos.y;
-        tile.pointerToSprite = selectedSprite;
-        mapPointToTileIndices.push_back(tile);
-    }
-
+bool Map::selectPalette(int button, int mX, int mY) {
     for (int i = 0; i < palette.size(); i++) {
         auto tile = palette.at(i);
         if (tile.isAbove(i % (int) width, i / (int) width, palettePos, mX, mY)) {
-            selectedSprite = i;
+            if (button == GLFW_MOUSE_BUTTON_LEFT)
+                selectedSprite = i;
+            else
+                selectedSprite = -1;
             std::cout << "Selected tile: " << i << std::endl;
-            return;
+            return true;
         }
     }
-    selectedSprite = -1;
+    return false;
+}
+
+void Map::placePalette(glm::vec3 &newTilePos) {
+    if (selectedSprite < 0)
+        return;
+    Tile tile{};
+    tile.x = newTilePos.x; // FIXME HM, her kan det bli overlapping av tiles.
+    tile.y = newTilePos.y;
+    tile.pointerToSprite = selectedSprite;
+    mapOfTiles.push_back(tile);
+}
+
+void Map::removePalette(glm::vec3 &newTilePos) {
+    for (int i = 0; i < mapOfTiles.size(); i++) {
+        auto tile = mapOfTiles.at(i);
+        if (tile.x == newTilePos.x && tile.y == newTilePos.y) {
+            mapOfTiles.erase(mapOfTiles.begin() + i);
+        }
+    }
 }
 
 void Map::render(Camera &camera, Shader &shader) {
@@ -75,7 +87,7 @@ void Map::render(Camera &camera, Shader &shader) {
             tile.render(i % (int) width, i / (int) width, palettePos, shader);
             i++;
         }
-        for (auto tile : mapPointToTileIndices) {
+        for (auto tile : mapOfTiles) {
             palette.at(tile.pointerToSprite).render(tile.x, tile.y, camera.pos, shader);
         }
 }
