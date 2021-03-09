@@ -16,7 +16,7 @@ int main() {
     static Camera camera;
     //nk_init_fixed(&ctx, calloc(1, MAX_MEMORY), MAX_MEMORY, &font);
 
-    mapCreate("GrassTiles.png", 24.0f);
+    map.create("GrassTiles.png", 24.0f);
     Shader shader("main");
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -46,21 +46,21 @@ int main() {
         }
     });
 
-    static float x, y;
+    static float mX, mY;
     glfwSetMouseButtonCallback(window.getWindow(), [](auto window, auto button, auto action, auto mods) {
        if (action != GLFW_RELEASE) {
-           map.selectPalette(button, x, y);
+           map.selectPalette(button, mX, mY, camera.pos);
        }
        /*else {
             topbarTransparent.release();
         }*/
 
-       std::cout << "X: " << x << "Y: " << y << std::endl;
+       std::cout << "X: " << mX << "Y: " << mY << std::endl;
     });
     glfwSetCursorPosCallback(window.getWindow(), [](auto window, auto xpos, auto ypos) {
-        x = xpos;
-        y = ypos;
-        //topbarTransparent.move(x, y);
+        mX = xpos;
+        mY = ypos;
+        //topbarTransparent.move(mX, mY);
     });
 
     // Run the game
@@ -82,18 +82,10 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
 
 //        triangle.shader.
-        for (auto tile : map.palette) {
-            tile.render(map.palettePos, shader, true);
-        }
-        for (auto tile : map.mapPointToTileIndices) {
-            map.palette.at(tile).render(camera.pos, shader, true);
-        }
+        map.render(camera, shader);
+
         if (map.selectedSprite >= 0)
-            map.palette.at(map.selectedSprite).render(
-                    glm::vec3(
-                            x / Window::WIDTH * 2.0f - Sprite::realTileWidth / 2.0f,
-                            y / Window::HEIGHT * 2.0f - Sprite::realTileHeight / 2.0f, 0),
-                            shader, false);
+            map.palette.at(map.selectedSprite).render(mX, mY, shader);
 //        triangle.render(camera);
 //        triangle2.render(camera);
 //        triangle3.render(camera);

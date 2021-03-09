@@ -15,16 +15,12 @@ void spriteUpdateTileSize();
 class Sprite {
 private:
     unsigned int VBO{}, VAO{}, EBO{}, texture{};
-    glm::vec3 modelPos{};
-
-    int tileX, tileY;
 
 public:
 
     inline static float realTileWidth{}, realTileHeight{};
 
-    Sprite(int tilemapX, int tilemapY, float texW, float texH, int tileX, int tileY, auto texture) {
-        setPos(tileX, tileY);
+    Sprite(int tilemapX, int tilemapY, float texW, float texH, auto texture) {
         this->texture = texture;
 
         const auto realX = -1.0f;
@@ -79,18 +75,20 @@ public:
         glDeleteBuffers(1, &EBO);
     }
 
-    void render(const glm::vec3 viewPos, Shader &shader, bool keepModelPos);
+    void render(int tileX, int tileY, glm::vec3 &viewPos, Shader &shader) const;
+    void render(int mX, int mY, Shader &shader) const;
 
-    void setPos(int tileX, int tileY) {
-        // trenger ikke å bruke annet enn window aspect for å bestemme variasjon. Bruk så opengl størrelse for å si størresle på en tile.
-        this->tileX = tileX;
-        this->tileY = tileY;
-        modelPos.x = (float) tileX * realTileWidth;
-        modelPos.y = (float) tileY * realTileHeight;
-    }
-
-    bool isAbove(glm::vec3 viewPos, int mX, int mY);
+    static bool isAbove(int tileX, int tileY, glm::vec3 &viewPos, int mX, int mY);
 };
+
+inline static const glm::vec3 screenCoordToTilePos(int mX, int mY, glm::vec3 &viewPos) {
+    // trenger ikke å bruke annet enn window aspect for å bestemme variasjon. Bruk så opengl størrelse for å si størresle på en tile.
+
+    auto asd =  0.0f;
+
+    return glm::vec3( (int) (((float) mX * 2.0f / Window::WIDTH + asd - viewPos.x) / Sprite::realTileWidth),
+                      (int) (((float)mY * 2.0f / Window::HEIGHT + asd - viewPos.y) / Sprite::realTileHeight), 0);
+}
 
 
 #endif //PLATFORMER_SPRITE_H
