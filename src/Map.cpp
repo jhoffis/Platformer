@@ -8,6 +8,35 @@
 
 const char *mapFilename = "map.txt";
 
+enum CollideType {
+    none, top, topLeft, topRight, sideLeft, sideRight, bot, botLeft, botRight
+};
+
+int genCollideType(int pointer) {
+    switch (pointer) {
+        case 0:
+            return topLeft;
+        case 1:
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+        case 4:
+            break;
+        case 5:
+            break;
+        case 6:
+            break;
+        case 7:
+            break;
+        case 8:
+            break;
+        case 9:
+            break;
+    }
+}
+
 void Map::load() {
 
     std::string tileTextLine;
@@ -17,7 +46,7 @@ void Map::load() {
 
 // Use a while loop together with the getline() function to read the file line by line
     while (getline (mapFile, tileTextLine)) {
-        int tileArr[4];
+        int tileArr[3];
         int i = 0;
         int n = 0;
         int digits[4];
@@ -45,8 +74,8 @@ void Map::load() {
         Tile tile{};
         tile.x = tileArr[0];
         tile.y = tileArr[1];
-        tile.collideType = tileArr[2];
-        tile.pointerToSprite = tileArr[3];
+        tile.pointerToSprite = tileArr[2];
+        tile.collideType = genCollideType(tileArr[2]);
 
         mapOfTiles.push_back(tile);
     }
@@ -60,7 +89,7 @@ void Map::save() {
     mapFile.open(mapFilename, std::ofstream::out | std::ofstream::trunc);
 
     for (auto tile : mapOfTiles) {
-        mapFile << tile.x << 'x' << tile.y << 'x' << tile.collideType << 'x' << tile.pointerToSprite << ';' << std::endl;
+        mapFile << tile.x << 'x' << tile.y << 'x' << tile.pointerToSprite << ';' << std::endl;
     }
 
     mapFile.close();
@@ -74,17 +103,7 @@ void Map::create(const char *imgPath, float tilemapPixelSize) {
     float texW = tilemapPixelSize / (float) img.w;
     float texH = tilemapPixelSize / (float) img.h;
 
-    unsigned int texture{};
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    // set the texture wrapping/filtering options (on the currently bound texture object)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    // load and generate the texture
-    createGLImage(img);
-    glBindTexture(GL_TEXTURE_2D, 0);
+    unsigned int texture = createTexture(img);
 
     for (int i = 0; i < w * h; i++) {
         int x = i % w;

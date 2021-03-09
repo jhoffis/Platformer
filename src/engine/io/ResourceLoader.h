@@ -17,4 +17,7 @@ struct CharImage {
 
 CharImage createCharImage(const char *path, bool flip);
 void createGLImage(CharImage &img);
+unsigned int createTexture(CharImage &img);
+
+
 #endif //PLATFORMER_RESOURCELOADER_H

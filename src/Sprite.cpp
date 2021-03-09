@@ -10,12 +10,12 @@ void spriteUpdateTileSize() {
     Sprite::realTileHeight = tileSize;
 }
 
-glm::vec3 realTilePos(int tileX, int tileY) {
+glm::vec3 realTilePos(float tileX, float tileY) {
     // trenger ikke å bruke annet enn window aspect for å bestemme variasjon. Bruk så opengl størrelse for å si størresle på en tile.
-    return glm::vec3((float) tileX * Sprite::realTileWidth, (float) tileY * Sprite::realTileHeight, 0);
+    return glm::vec3(tileX * Sprite::realTileWidth, tileY * Sprite::realTileHeight, 0);
 }
 
-void Sprite::render(int tileX, int tileY, glm::vec3 &viewPos, Shader &shader) const {
+void Sprite::render(float tileX, float tileY, glm::vec3 &viewPos, Shader &shader) const {
     shader.use();
     glBindTexture(GL_TEXTURE_2D, texture);
     glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
@@ -39,7 +39,6 @@ void Sprite::render(int mX, int mY, Shader &shader) const {
 
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 }
-
 
 bool Sprite::isAbove(int tileX, int tileY, glm::vec3 &viewPos, int mX, int mY) {
     auto modelPos = realTilePos(tileX, tileY);

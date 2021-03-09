@@ -1,16 +1,13 @@
-//
-// Created by Jens Benz on 06.03.2021.
-//
-
 #ifndef PLATFORMER_SPRITE_H
 #define PLATFORMER_SPRITE_H
 
 #include "src/engine/io/Window.h"
 #include "src/Camera.h"
 
-static const float tileSize = 0.1f;
+static const float tileSize = 24.0f / 1440.0f * 14.0f;
 
 void spriteUpdateTileSize();
+glm::vec3 realTilePos(float tileX, float tileY);
 
 class Sprite {
 private:
@@ -73,11 +70,12 @@ public:
         glDeleteBuffers(1, &EBO);
     }
 
-    void render(int tileX, int tileY, glm::vec3 &viewPos, Shader &shader) const;
+    void render(float tileX, float tileY, glm::vec3 &viewPos, Shader &shader) const;
     void render(int mX, int mY, Shader &shader) const;
 
     static bool isAbove(int tileX, int tileY, glm::vec3 &viewPos, int mX, int mY);
 };
+
 
 inline static const glm::vec3 screenCoordToTilePos(int mX, int mY, glm::vec3 &viewPos) {
     // trenger ikke å bruke annet enn window aspect for å bestemme variasjon. Bruk så opengl størrelse for å si størresle på en tile.
@@ -85,10 +83,11 @@ inline static const glm::vec3 screenCoordToTilePos(int mX, int mY, glm::vec3 &vi
     auto asd =  0.0f;
 
     auto pos = glm::vec3( (int) (((float) mX * 2.0f / Window::WIDTH + asd - viewPos.x) / Sprite::realTileWidth),
-                      (int) (((float)mY * 2.0f / Window::HEIGHT + asd - viewPos.y) / Sprite::realTileHeight), 0);
+                          (int) (((float)mY * 2.0f / Window::HEIGHT + asd - viewPos.y) / Sprite::realTileHeight), 0);
     std::cout << "Place X: " << pos.x << " Place Y: " << pos.y << std::endl;
     return pos;
 }
+
 
 
 #endif //PLATFORMER_SPRITE_H

@@ -1,5 +1,5 @@
 #include <src/engine/utils/Timer.h>
-#include "src/Map.h"
+#include "src/Player.h"
 
 
 //void processInput(GLFWwindow *window)
@@ -17,6 +17,9 @@ int main() {
     //nk_init_fixed(&ctx, calloc(1, MAX_MEMORY), MAX_MEMORY, &font);
 
     map.create("GrassTiles.png", 24.0f);
+    player.create("Character.png", 24.0f);
+    player.x = 6;
+    player.y = 3;
     Shader shader("main");
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -27,6 +30,9 @@ int main() {
         std::cout << "Key: " << key << std::endl;
 
         if (action != GLFW_RELEASE) {
+            /*
+             * GLOBAL KEYS
+             */
             switch (key) {
                 case GLFW_KEY_F2:
                     editMode = !editMode;
@@ -35,22 +41,42 @@ int main() {
                     map.save();
                     break;
             }
-            if (editMode) {
-                switch (key) {
-                    case GLFW_KEY_UP:
-                        camera.pos.y += 0.1;
-                        break;
-                    case GLFW_KEY_DOWN:
-                        camera.pos.y -= 0.1;
-                        break;
-                    case GLFW_KEY_LEFT:
-                        camera.pos.x += 0.1;
-                        break;
-                    case GLFW_KEY_RIGHT:
-                        camera.pos.x -= 0.1;
-                        break;
-                }
+        }
+
+        if (editMode) {
+            /*
+             * EDIT KEYS
+             */
+            switch (key) {
+                case GLFW_KEY_UP:
+                    camera.pos.y += 0.1;
+                    break;
+                case GLFW_KEY_DOWN:
+                    camera.pos.y -= 0.1;
+                    break;
+                case GLFW_KEY_LEFT:
+                    camera.pos.x += 0.1;
+                    break;
+                case GLFW_KEY_RIGHT:
+                    camera.pos.x -= 0.1;
+                    break;
             }
+        } else {
+            /*
+             * PLAY KEYS
+             */
+            switch (key) {
+                case GLFW_KEY_A:
+                    player.left = action != GLFW_RELEASE;
+                    break;
+                case GLFW_KEY_D:
+                    player.right = action != GLFW_RELEASE;
+                    break;
+                case GLFW_KEY_SPACE:
+                    player.jump = action != GLFW_RELEASE;
+                    break;
+            }
+
         }
     });
 
@@ -83,6 +109,7 @@ int main() {
     });
 
     // Run the game
+    Timer::nowDelta();
     bool running = true;
     while(running)
     {
@@ -93,11 +120,21 @@ int main() {
         glfwPollEvents();
         glClear(GL_COLOR_BUFFER_BIT);
 
+        double delta = Timer::nowDelta();
+
         // Render start
         map.render(camera, shader);
 
-        if (editMode && map.selectedSprite >= 0)
-            map.palette.at(map.selectedSprite).render(mX, mY, shader);
+        if (editMode) {
+            if (map.selectedSprite >= 0)
+                map.palette.at(map.selectedSprite).render(mX, mY, shader);
+        } else {
+            auto playerPos = realTilePos(player.x, player.y);
+            camera.pos.x = 1.0 - playerPos.x - Sprite::realTileWidth / 2.0;
+            camera.pos.y = 1.0 - playerPos.y - Sprite::realTileHeight / 2.0;
+        }
+
+        player.render(camera, shader, delta);
 
         // Render end
         glfwSwapBuffers(window.getWindow());
