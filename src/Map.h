@@ -9,7 +9,7 @@
 
 struct Tile {
     int x, y;
-    bool collideTop{}, collideBot{}, collideLeft{}, collideRight{};
+    unsigned int collideType;
     unsigned int pointerToSprite;
 };
 
@@ -25,6 +25,9 @@ struct Map {
     void removePalette(glm::vec3 &newTilePos);
     void create(const char *imgPath, float tilemapPixelSize);
     void render(Camera &camera, Shader &shader);
+
+    void load();
+    void save();
 };
 inline Map map{};
 inline bool editMode = true;

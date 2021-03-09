@@ -3,6 +3,68 @@
 //
 
 #include "Map.h"
+#include <iostream>
+#include <fstream>
+
+const char *mapFilename = "map.txt";
+
+void Map::load() {
+
+    std::string tileTextLine;
+
+// Read from the text file
+    std::ifstream mapFile(mapFilename);
+
+// Use a while loop together with the getline() function to read the file line by line
+    while (getline (mapFile, tileTextLine)) {
+        int tileArr[4];
+        int i = 0;
+        int n = 0;
+        int digits[4];
+        for (auto c : tileTextLine) {
+            if (c == 'x' || c == ';') {
+                if (i >= sizeof(tileArr))
+                    break;
+
+                int num = 0;
+                int place = n - 1;
+                for (int a = 0; a < n; a++) {
+                    int digit = 10 * place;
+                    num += (digit != 0 ? digit : 1) * digits[a];
+                    place--;
+                }
+                tileArr[i] = num;
+
+                i++;
+                n = 0;
+            } else {
+                digits[n] = c - '0';
+                n++;
+            }
+        }
+        Tile tile{};
+        tile.x = tileArr[0];
+        tile.y = tileArr[1];
+        tile.collideType = tileArr[2];
+        tile.pointerToSprite = tileArr[3];
+
+        mapOfTiles.push_back(tile);
+    }
+
+// Close the file
+    mapFile.close();
+}
+
+void Map::save() {
+    std::ofstream mapFile;
+    mapFile.open(mapFilename, std::ofstream::out | std::ofstream::trunc);
+
+    for (auto tile : mapOfTiles) {
+        mapFile << tile.x << 'x' << tile.y << 'x' << tile.collideType << 'x' << tile.pointerToSprite << ';' << std::endl;
+    }
+
+    mapFile.close();
+}
 
 void Map::create(const char *imgPath, float tilemapPixelSize) {
     auto img = createCharImage(imgPath, true);
@@ -28,13 +90,14 @@ void Map::create(const char *imgPath, float tilemapPixelSize) {
         int x = i % w;
         int y = i / w;
         palette.emplace_back(x, y, texW, texH, texture);
-//        map.mapOfTiles.push_back(i);
     }
 
     width = w;
     height = h;
 
     palettePos = glm::vec3(Sprite::realTileWidth / 2.0f, Sprite::realTileHeight / 2.0f, 0);
+
+    load();
 }
 
 void Map::destroy() {

@@ -24,13 +24,15 @@ int main() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glfwSetKeyCallback(window.getWindow(), [](auto window, auto key, auto scancode, auto action, auto mods) {
-//        _sceneHandler->keyInput(key, action);
         std::cout << "Key: " << key << std::endl;
 
         if (action != GLFW_RELEASE) {
             switch (key) {
                 case GLFW_KEY_F2:
                     editMode = !editMode;
+                    break;
+                case GLFW_KEY_F3:
+                    map.save();
                     break;
             }
             if (editMode) {
