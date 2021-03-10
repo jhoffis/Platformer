@@ -23,28 +23,49 @@ void Player::create(const char *imgPath, float tilemapPixelSize) {
 
 void Player::tick(double delta) {
     selectedSprite += delta * 0.5;
+    double wishX = x;
+    double wishY = y;
+
 
     if (left) {
         if (velocityX > -movementSpeed)
             velocityX -= movementSpeed * 0.5 * delta;
-        x += velocityX * delta * (run ? 2.0 : 1.0);
+    wishX += velocityX * delta * (run ? 2.0 : 1.0);
     }
     if (right) {
         if (velocityX < movementSpeed)
             velocityX += movementSpeed * 0.5 * delta;
-        x += velocityX * delta * (run ? 2.0 : 1.0);
+        wishX += velocityX * delta * (run ? 2.0 : 1.0);
     }
 
     if (velocityY > -gravity) {
         velocityY -= gravity * delta / 3.0f;
     }
 
-    y -= velocityY * delta;
+    wishY -= velocityY * delta;
 
-    if (y > 3) {
-        y = 3;
-        velocityY = 0;
+    // finn brikker som er rundt og så stopp om du må.
+        // går oppover
+
+    float centerX = wishX + 0.5f;
+    float centerY = wishY + 0.5f;
+
+    Tile *stopX = map.shouldStopAtTileNearX(velocityX, centerX, centerY);
+    if (stopX != nullptr) {
+        x = stopX->x + (velocityX < 0 ? 1 : -1); // - (velocityX < 0 ? 1 : -1);
+        velocityX = 0;
+    } else {
+        x = wishX;
     }
+
+    auto stopY = map.shouldStopAtTileNearY(velocityY, centerX, centerY);
+    if (stopY != nullptr) {
+        y = stopY->y - (velocityY < 0 ? 1 : -1);
+        velocityY = 0;
+    } else {
+        y = wishY;
+    }
+
 
     // tegning av figur status velging
     if (velocityY > 0) {

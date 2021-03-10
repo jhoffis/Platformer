@@ -27,6 +27,10 @@ struct Map {
 
     void load();
     void save();
+
+    Tile* getTileAt(int x, int y);
+    Tile*  shouldStopAtTileNearX(float velocityX, float x, float y);
+    Tile*  shouldStopAtTileNearY(float velocityY, float x, float y);
 };
 inline Map map{};
 inline bool editMode = true;

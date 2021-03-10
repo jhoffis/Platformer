@@ -145,3 +145,46 @@ void Map::render(Camera &camera, Shader &shader) {
             palette.at(tile.pointerToSprite).render(tile.x, tile.y, camera.pos, shader, false);
         }
 }
+
+Tile *Map::shouldStopAtTileNearX(float velocityX, float x, float y) {
+    int direction = (velocityX <= 0 ? -1 : 1);
+    Tile *tile = nullptr;
+    int i = 1;
+    do {
+        auto tileTemp = getTileAt((int) x + (direction * i), (int) y);
+        if (tileTemp) {
+            tile = tileTemp;
+            break;
+        }
+        i++;
+    } while (i <= abs((int) velocityX) + 1);
+
+    return tile;
+}
+
+Tile *Map::shouldStopAtTileNearY(float velocityY, float x, float y) {
+    int direction = (velocityY <= 0 ? 1 : -1);
+    Tile *tile = nullptr;
+    int i = 0;
+    do {
+        auto tileTemp = getTileAt((int) x, (int) y + (direction * i));
+        if (tileTemp) {
+            tile = tileTemp;
+            break;
+        }
+        i++;
+    } while (i <= abs((int) velocityY) + 1);
+
+    return tile;
+}
+
+Tile* Map::getTileAt(int x, int y) {
+    for (int i = 0; i < mapOfTiles.size(); i++) {
+        auto tile = mapOfTiles.at(i);
+        if (tile.x == x && tile.y == y) {
+            return &tile;
+        }
+    }
+
+    return nullptr;
+}
