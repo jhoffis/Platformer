@@ -192,7 +192,7 @@ Tile *Map::shouldStopAtTileNearX(float velocityX, float x, float y) {
     int i = 0;
     do {
         auto tileTemp = getTileAt((int) x + (direction * i), (int) y);
-        if (tileTemp) {
+        if (tileTemp && tileTemp->pointerToSprite < 32) {
             tile = tileTemp;
             break;
         }
@@ -210,7 +210,8 @@ Tile *Map::shouldStopAtTileNearY(float velocityY, float x, float y) {
         auto tileTemp1 = getTileAt((int) x, (int) y + (direction * i));
         auto tileTemp2 = getTileAt((int) x + 1, (int) y + (direction * i));
 
-        if (tileTemp1) {
+        if (tileTemp1 && tileTemp1->pointerToSprite < 32) {
+
             if (tileTemp2) {
                 tile = tileTemp1;
                 break;
@@ -223,7 +224,7 @@ Tile *Map::shouldStopAtTileNearY(float velocityY, float x, float y) {
                 break;
             }
         }
-        if (tileTemp2) {
+        if (tileTemp2 && tileTemp2->pointerToSprite < 32) {
             float dist = abs(x - (float) tileTemp2->x);
             auto checkTile = getTileAt(tileTemp2->x, tileTemp2->y - (direction));
             if (!checkTile && dist < 0.9f) {
