@@ -100,9 +100,11 @@ void Map::destroy() {
 }
 
 bool Map::selectPalette(int button, int mX, int mY) {
-    for (int i = 0; i < palette.size(); i++) {
+    int n = 0;
+    for (int i = 0; i < palette.size(); i += 16) {
+
         auto tile = palette.at(i);
-        if (tile.isAbove(i % (int) width, i / (int) width, palettePos, mX, mY)) {
+        if (tile.isAbove(n % (int) width, n / (int) width, palettePos, mX, mY)) {
             if (button == GLFW_MOUSE_BUTTON_LEFT)
                 selectedSprite = i;
             else
@@ -110,13 +112,15 @@ bool Map::selectPalette(int button, int mX, int mY) {
             std::cout << "Selected tile: " << i << std::endl;
             return true;
         }
+        n++;
     }
     return false;
 }
 
 void Map::placePalette(glm::vec3 &newTilePos) {
-    if (selectedSprite < 0)
+    if (selectedSprite < 0 || getTileAt(newTilePos.x, newTilePos.y))
         return;
+
     Tile tile{};
     tile.x = newTilePos.x; // FIXME HM, her kan det bli overlapping av tiles.
     tile.y = newTilePos.y;
@@ -134,16 +138,16 @@ void Map::removePalette(glm::vec3 &newTilePos) {
 }
 
 void Map::render(Camera &camera, Shader &shader) {
-        if (editMode) {
-            int i = 0;
-            for (Sprite tile : palette) {
-                tile.render(i % (int) width, i / (int) width, palettePos, shader, false);
-                i++;
-            }
+    if (editMode) {
+        int n = 0;
+        for (int i = 0; i < palette.size(); i += 16) {
+            palette.at(i).render(n % (int) width, n / (int) width, palettePos, shader, false);
+            n++;
         }
-        for (auto tile : mapOfTiles) {
-            palette.at(tile.pointerToSprite).render(tile.x, tile.y, camera.pos, shader, false);
-        }
+    }
+    for (auto tile : mapOfTiles) {
+        palette.at(tile.pointerToSprite).render(tile.x, tile.y, camera.pos, shader, false);
+    }
 }
 
 Tile *Map::shouldStopAtTileNearX(float velocityX, float x, float y) {
@@ -199,12 +203,8 @@ Tile *Map::shouldStopAtTileNearY(float velocityY, float x, float y) {
 }
 
 Tile* Map::getTileAt(int x, int y) {
-    for (int i = 0; i < mapOfTiles.size(); i++) {
-        auto tile = mapOfTiles.at(i);
-        if (tile.x == x && tile.y == y) {
-            return &mapOfTiles.at(i);
-        }
-    }
-
+    for (auto & mapOfTile : mapOfTiles)
+        if (mapOfTile.x == x && mapOfTile.y == y)
+            return &mapOfTile;
     return nullptr;
 }
