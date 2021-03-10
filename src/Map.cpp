@@ -114,13 +114,21 @@ bool Map::selectPalette(int button, int mX, int mY) {
     return false;
 }
 
-void Map::placePalette(glm::vec3 &newTilePos) {
+void Map::placePalette(glm::vec3& newTilePos) {
     if (selectedSprite < 0)
         return;
     Tile tile{};
     tile.x = newTilePos.x; // FIXME HM, her kan det bli overlapping av tiles.
     tile.y = newTilePos.y;
-    tile.pointerToSprite = selectedSprite;
+    if (selectedSprite == 0) {
+        tile.pointerToSprite = getTileIndex(0, tile.x, tile.y);
+    }
+    else if (selectedSprite == 16) {
+        tile.pointerToSprite = getTileIndex(1, tile.x, tile.y);
+    }
+    else {
+        tile.pointerToSprite = selectedSprite;
+    }
     mapOfTiles.push_back(tile);
 }
 
@@ -131,6 +139,33 @@ void Map::removePalette(glm::vec3 &newTilePos) {
             mapOfTiles.erase(mapOfTiles.begin() + i);
         }
     }
+}
+
+int Map::getTileIndex(int pal, int x, int y) {
+    int tileIndex = 0;
+    Tile *adjacentTile;
+    adjacentTile = getTileAt(x, y-1);
+    if (adjacentTile) {
+        tileIndex += 1;
+        adjacentTile->pointerToSprite += 8;
+    }
+    adjacentTile = getTileAt(x+1, y);
+    if (adjacentTile) {
+        tileIndex += 2;
+        adjacentTile->pointerToSprite += 4;
+    }
+    adjacentTile = getTileAt(x-1, y);
+    if (adjacentTile) {
+        tileIndex += 4;
+        adjacentTile->pointerToSprite += 2;
+    }
+    adjacentTile = getTileAt(x, y+1);
+    if (adjacentTile) {
+        tileIndex += 8;
+        adjacentTile->pointerToSprite += 1;
+    }
+    tileIndex += pal * 16;
+    return tileIndex;
 }
 
 void Map::render(Camera &camera, Shader &shader) {

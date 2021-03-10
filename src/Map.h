@@ -22,6 +22,7 @@ struct Map {
     bool selectPalette(int button, int mX, int mY);
     void placePalette(glm::vec3 &newTilePos);
     void removePalette(glm::vec3 &newTilePos);
+    int getTileIndex(int pal, int x, int y);
     void create(const char *imgPath, float tilemapPixelSize);
     void render(Camera &camera, Shader &shader);
 
