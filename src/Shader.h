@@ -30,17 +30,17 @@ public:
         glUseProgram(ID);
     }
 
-    void setBool(const std::string &name, bool value) const
+    void uniformBool(bool value, const char *location) const
     {
-        glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
+        glUniform1i(glGetUniformLocation(ID, location), (int)value);
     }
-    void setInt(const std::string &name, int value) const
+    void uniformInt(int value, const char *location) const
     {
-        glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
+        glUniform1i(glGetUniformLocation(ID, location), value);
     }
-    void setFloat(const std::string &name, float value) const
+    void uniformFloat(float value, const char *location) const
     {
-        glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+        glUniform1f(glGetUniformLocation(ID, location), value);
     }
 
     void uniformMatrix4(auto mat4f, const char *location) {

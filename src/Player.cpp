@@ -21,20 +21,44 @@ void Player::create(const char *imgPath, float tilemapPixelSize) {
     }
 }
 
-void Player::render(Camera &camera, Shader &shader, double delta) {
+void Player::tick(double delta) {
     selectedSprite += delta * 0.5;
 
-    double movementSpeed = 0.3;
     if (left) {
-        x -= movementSpeed * delta;
+        if (velocityX > -movementSpeed)
+            velocityX -= movementSpeed * 0.5 * delta;
+        x += velocityX * delta * (run ? 2.0 : 1.0);
     }
     if (right) {
-        x += movementSpeed * delta;
-    }
-    if (jump) {
-        y -= movementSpeed * delta;
+        if (velocityX < movementSpeed)
+            velocityX += movementSpeed * 0.5 * delta;
+        x += velocityX * delta * (run ? 2.0 : 1.0);
     }
 
+    if (velocityY > -gravity) {
+        velocityY -= gravity * delta / 3.0f;
+    }
+
+    y -= velocityY * delta;
+
+    if (y > 3) {
+        y = 3;
+        velocityY = 0;
+    }
+
+    // tegning av figur status velging
+    if (velocityY > 0) {
+        status = 1;
+    } else if (velocityY < 0) {
+        status = 2;
+    } else if (velocityX != 0){
+        status = 3;
+    } else {
+        status = 0;
+    }
+}
+
+void Player::render(Camera &camera, Shader &shader) {
     int realSelectedSprite = 0;
     switch (status) {
         case 0:
@@ -44,11 +68,12 @@ void Player::render(Camera &camera, Shader &shader, double delta) {
             realSelectedSprite = ((int) selectedSprite) % idleSize + jumpSize;
         break;
         case 2:
+            realSelectedSprite = ((int) selectedSprite) % idleSize + jumpSize + fallSize;
         break;
         case 3:
             realSelectedSprite = ((int) selectedSprite) % idleSize + jumpSize + fallSize + runSize;
         break;
     }
 
-    sprites.at(realSelectedSprite).render(x, y, camera.pos, shader);
+    sprites.at(realSelectedSprite).render(x, y, camera.pos, shader, flipDirectionX);
 }

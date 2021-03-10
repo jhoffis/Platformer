@@ -9,7 +9,6 @@
 
 struct Tile {
     int x, y;
-    unsigned int collideType;
     unsigned int pointerToSprite;
 };
 

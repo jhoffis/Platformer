@@ -8,13 +8,19 @@ out vec2 passTexCoord;
 
 uniform mat4 model;
 uniform mat4 view;
-uniform mat4 projection;
+uniform int flipSideways;
 
 void main()
 {
     gl_Position =
 //    projection * view *
     model * view * vec4(position, 1.0);
-    passColor = color; // set ourColor to the input color we got from the vertex data
-    passTexCoord = texCoord;
-}       
+    passColor = color;
+
+    // FIXME Denne tegner hopping når den er baklengs fordi det er motsatt av idle
+    if (flipSideways != 0) {
+        passTexCoord = vec2(1.0 - texCoord.s, texCoord.t);
+    } else {
+        passTexCoord = texCoord;
+    }
+}

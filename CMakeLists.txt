@@ -21,7 +21,6 @@ add_executable(${PROJECT_NAME} src/main/Game.cpp
                                 src/engine/graphics/Camera.cpp src/engine/graphics/Camera.h 
                                 #src/scenes/adt/NkContext.cpp src/scenes/adt/NkContext.h 
                                 #src/audio/AudioRemote.h
-                                src/engine/graphics/GameObject.cpp src/engine/graphics/GameObject.h
         #src/scenes/regular/TestScene.cpp src/scenes/regular/TestScene.h)
         src/Sprite.cpp src/Sprite.h src/Shader.h src/Shader.cpp src/engine/io/ResourceLoader.h src/engine/io/ResourceLoader.cpp src/Camera.h src/Map.cpp src/Map.h src/Player.cpp src/Player.h)
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)

@@ -67,13 +67,25 @@ int main() {
              */
             switch (key) {
                 case GLFW_KEY_A:
-                    player.left = action != GLFW_RELEASE;
+                    player.setLeft(action != GLFW_RELEASE);
                     break;
                 case GLFW_KEY_D:
-                    player.right = action != GLFW_RELEASE;
+                    player.setRight(action != GLFW_RELEASE);
+                    break;
+                case GLFW_KEY_LEFT_SHIFT:
+                    player.run = action != GLFW_RELEASE;
                     break;
                 case GLFW_KEY_SPACE:
-                    player.jump = action != GLFW_RELEASE;
+                    if (action != GLFW_RELEASE) {
+                        if (!player.jumping && player.velocityY == 0) {
+                            player.jump();
+                        }
+                    } else if (player.velocityY > 0){
+                        player.velocityY = 0;
+                    }
+                    if (action == GLFW_RELEASE) {
+                        player.jumping = false;
+                    }
                     break;
             }
 
@@ -121,20 +133,21 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         double delta = Timer::nowDelta();
+        player.tick(delta);
 
         // Render start
         map.render(camera, shader);
 
         if (editMode) {
             if (map.selectedSprite >= 0)
-                map.palette.at(map.selectedSprite).render(mX, mY, shader);
+                map.palette.at(map.selectedSprite).render(mX, mY, shader, false);
         } else {
             auto playerPos = realTilePos(player.x, player.y);
             camera.pos.x = 1.0 - playerPos.x - Sprite::realTileWidth / 2.0;
             camera.pos.y = 1.0 - playerPos.y - Sprite::realTileHeight / 2.0;
         }
 
-        player.render(camera, shader, delta);
+        player.render(camera, shader);
 
         // Render end
         glfwSwapBuffers(window.getWindow());

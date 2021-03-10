@@ -8,35 +8,6 @@
 
 const char *mapFilename = "map.txt";
 
-enum CollideType {
-    none, top, topLeft, topRight, sideLeft, sideRight, bot, botLeft, botRight
-};
-
-int genCollideType(int pointer) {
-    switch (pointer) {
-        case 0:
-            return topLeft;
-        case 1:
-            break;
-        case 2:
-            break;
-        case 3:
-            break;
-        case 4:
-            break;
-        case 5:
-            break;
-        case 6:
-            break;
-        case 7:
-            break;
-        case 8:
-            break;
-        case 9:
-            break;
-    }
-}
-
 void Map::load() {
 
     std::string tileTextLine;
@@ -50,6 +21,7 @@ void Map::load() {
         int i = 0;
         int n = 0;
         int digits[4];
+        bool neg = false;
         for (auto c : tileTextLine) {
             if (c == 'x' || c == ';') {
                 if (i >= sizeof(tileArr))
@@ -62,10 +34,13 @@ void Map::load() {
                     num += (digit != 0 ? digit : 1) * digits[a];
                     place--;
                 }
-                tileArr[i] = num;
+                tileArr[i] = (neg ? -1 : +1) * num;
 
                 i++;
                 n = 0;
+                neg = false;
+            } else if (c == '-') {
+                neg = true;
             } else {
                 digits[n] = c - '0';
                 n++;
@@ -75,7 +50,6 @@ void Map::load() {
         tile.x = tileArr[0];
         tile.y = tileArr[1];
         tile.pointerToSprite = tileArr[2];
-        tile.collideType = genCollideType(tileArr[2]);
 
         mapOfTiles.push_back(tile);
     }
@@ -163,11 +137,11 @@ void Map::render(Camera &camera, Shader &shader) {
         if (editMode) {
             int i = 0;
             for (Sprite tile : palette) {
-                tile.render(i % (int) width, i / (int) width, palettePos, shader);
+                tile.render(i % (int) width, i / (int) width, palettePos, shader, false);
                 i++;
             }
         }
         for (auto tile : mapOfTiles) {
-            palette.at(tile.pointerToSprite).render(tile.x, tile.y, camera.pos, shader);
+            palette.at(tile.pointerToSprite).render(tile.x, tile.y, camera.pos, shader, false);
         }
 }

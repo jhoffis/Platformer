@@ -70,8 +70,8 @@ public:
         glDeleteBuffers(1, &EBO);
     }
 
-    void render(float tileX, float tileY, glm::vec3 &viewPos, Shader &shader) const;
-    void render(int mX, int mY, Shader &shader) const;
+    void render(float tileX, float tileY, glm::vec3 &viewPos, Shader &shader, bool flipSideways) const;
+    void render(int mX, int mY, Shader &shader, bool flipSideways) const;
 
     static bool isAbove(int tileX, int tileY, glm::vec3 &viewPos, int mX, int mY);
 };

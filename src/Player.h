@@ -10,11 +10,34 @@ struct Player {
     double selectedSprite = 0;
     std::vector<Sprite> sprites;
 
-    float x, y;
-    bool left, right, jump;
+    double movementSpeed = 0.3;
+    const double gravity = 0.65, initVelocityY = 1.4;
+    float x, y, velocityX, velocityY;
+
+    bool left, right, run, jumping, flipDirectionX;
+    void setLeft(bool left) {
+        if (this->left != left) {
+            this->left = left;
+            flipDirectionX = true;
+            velocityX = 0;
+        }
+    }
+    void setRight(bool right) {
+        if (this->right != right) {
+            this->right = right;
+            flipDirectionX = false;
+            velocityX = 0;
+        }
+    }
 
     void create(const char *imgPath, float tilemapPixelSize);
-    void render(Camera &camera, Shader &shader, double delta);
+    void tick(double delta);
+    void render(Camera &camera, Shader &shader);
+
+    void jump() {
+        jumping = true;
+        velocityY = initVelocityY;
+    }
 };
 static inline Player player{};
 
