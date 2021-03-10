@@ -11,7 +11,7 @@ struct Player {
     std::vector<Sprite> sprites;
 
     double movementSpeed = 0.3;
-    const double gravity = 0.65, initVelocityY = 1.4;
+    const double gravity = 0.65, initVelocityY = -1.4;
     float x, y, velocityX, velocityY;
 
     bool left, right, run, jumping, flipDirectionX;

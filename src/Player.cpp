@@ -38,29 +38,43 @@ void Player::tick(double delta) {
         wishX += velocityX * delta * (run ? 2.0 : 1.0);
     }
 
-    if (velocityY > -gravity) {
-        velocityY -= gravity * delta / 3.0f;
+    if (velocityY < gravity) {
+        velocityY += gravity * delta / 3.0f;
     }
 
-    wishY -= velocityY * delta;
+    wishY += velocityY * delta;
 
     // finn brikker som er rundt og så stopp om du må.
         // går oppover
 
-    float centerX = wishX + 0.5f;
-    float centerY = wishY + 0.5f;
-
-    Tile *stopX = map.shouldStopAtTileNearX(velocityX, centerX, centerY);
-    if (stopX != nullptr) {
-        x = stopX->x + (velocityX < 0 ? 1 : -1); // - (velocityX < 0 ? 1 : -1);
+    Tile *stopX = map.shouldStopAtTileNearX(velocityX, x, y);
+    if (stopX) {
+        if (stopX->x < x && left) {
+            x = stopX->x + 1;
+        } else if (right) {
+            if (stopX->x > x + 1.0f)
+                x = stopX->x - 1;
+            else
+                x = wishX;
+        }
         velocityX = 0;
     } else {
         x = wishX;
     }
 
-    auto stopY = map.shouldStopAtTileNearY(velocityY, centerX, centerY);
-    if (stopY != nullptr) {
-        y = stopY->y - (velocityY < 0 ? 1 : -1);
+    auto stopY = map.shouldStopAtTileNearY(velocityY, x, y);
+    if (stopY) {
+        int mod = (velocityY < 0 ? 1 : -1);
+        float wishYCollider = stopY->y + mod;
+        // hopper eller går ikke oppover for kan ikke falle oppover
+        if (velocityY < 0) {
+            if (abs(y) - abs(wishYCollider) < 1.0f)
+                y = wishY;
+            else
+                y = wishYCollider;
+        } else if (velocityY >= 0 && y < wishY) {
+            y = wishYCollider;
+        }
         velocityY = 0;
     } else {
         y = wishY;

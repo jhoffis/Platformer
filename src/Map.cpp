@@ -147,9 +147,10 @@ void Map::render(Camera &camera, Shader &shader) {
 }
 
 Tile *Map::shouldStopAtTileNearX(float velocityX, float x, float y) {
-    int direction = (velocityX <= 0 ? -1 : 1);
+    int direction = (velocityX < 0 ? -1 : 1);
+
     Tile *tile = nullptr;
-    int i = 1;
+    int i = 0;
     do {
         auto tileTemp = getTileAt((int) x + (direction * i), (int) y);
         if (tileTemp) {
@@ -157,20 +158,39 @@ Tile *Map::shouldStopAtTileNearX(float velocityX, float x, float y) {
             break;
         }
         i++;
-    } while (i <= abs((int) velocityX) + 1);
+    } while (i <= abs((int) velocityX) + (velocityX > 0));
 
     return tile;
 }
 
 Tile *Map::shouldStopAtTileNearY(float velocityY, float x, float y) {
-    int direction = (velocityY <= 0 ? 1 : -1);
+    int direction = (velocityY < 0 ? -1 : 1);
     Tile *tile = nullptr;
-    int i = 0;
+    int i = 1;
     do {
-        auto tileTemp = getTileAt((int) x, (int) y + (direction * i));
-        if (tileTemp) {
-            tile = tileTemp;
-            break;
+        auto tileTemp1 = getTileAt((int) x, (int) y + (direction * i));
+        auto tileTemp2 = getTileAt((int) x + 1, (int) y + (direction * i));
+
+        if (tileTemp1) {
+            if (tileTemp2) {
+                tile = tileTemp1;
+                break;
+            }
+            // hvis du faller sjekk om det finnes en ovenfor og fortsett om det er sant. Om du hopper, sjekk om det finnes en under. TODO kanskje tillate walljump om sant?
+            float dist = abs(x - (float) tileTemp1->x);
+            auto checkTile = getTileAt(tileTemp1->x, tileTemp1->y - (direction));
+            if (!checkTile && dist < 0.9f) {
+                tile = tileTemp1;
+                break;
+            }
+        }
+        if (tileTemp2) {
+            float dist = abs(x - (float) tileTemp2->x);
+            auto checkTile = getTileAt(tileTemp2->x, tileTemp2->y - (direction));
+            if (!checkTile && dist < 0.9f) {
+                tile = tileTemp2;
+                break;
+            }
         }
         i++;
     } while (i <= abs((int) velocityY) + 1);
@@ -182,7 +202,7 @@ Tile* Map::getTileAt(int x, int y) {
     for (int i = 0; i < mapOfTiles.size(); i++) {
         auto tile = mapOfTiles.at(i);
         if (tile.x == x && tile.y == y) {
-            return &tile;
+            return &mapOfTiles.at(i);
         }
     }
 
