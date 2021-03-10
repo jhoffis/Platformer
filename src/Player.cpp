@@ -82,12 +82,19 @@ void Player::tick(double delta) {
 
 
     // tegning av figur status velging
-    if (velocityY > 0) {
+    // Oppover
+    if (velocityY >= 0.3) {
         status = 1;
-    } else if (velocityY < 0) {
+    // Fall
+    } else if (velocityY <= -0.3) {
         status = 2;
-    } else if (velocityX != 0){
+    // I luften
+    } else if (velocityY != 0) {
         status = 3;
+    // I bevegelse
+    } else if (velocityX != 0){
+        status = 4;
+    // Stillestående
     } else {
         status = 0;
     }
@@ -96,17 +103,25 @@ void Player::tick(double delta) {
 void Player::render(Camera &camera, Shader &shader) {
     int realSelectedSprite = 0;
     switch (status) {
+        // Stillestående
         case 0:
             realSelectedSprite = ((int) selectedSprite) % idleSize;
         break;
+        // Oppover
         case 1:
-            realSelectedSprite = ((int) selectedSprite) % idleSize + jumpSize;
+            realSelectedSprite = idleSize + 1;
         break;
+        // Fall
         case 2:
-            realSelectedSprite = ((int) selectedSprite) % idleSize + jumpSize + fallSize;
+            realSelectedSprite = idleSize + jumpSize;
         break;
+        // I luften
         case 3:
-            realSelectedSprite = ((int) selectedSprite) % idleSize + jumpSize + fallSize + runSize;
+            realSelectedSprite = idleSize + (jumpSize - 1);
+        break;
+        // Bevegelse
+        case 4:
+            realSelectedSprite = ((int)selectedSprite) % runSize + idleSize + jumpSize + fallSize;
         break;
     }
 
