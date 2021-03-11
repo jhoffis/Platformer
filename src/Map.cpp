@@ -209,11 +209,6 @@ Tile *Map::shouldStopAtTileNearY(float velocityY, float x, float y) {
     Tile *tile = nullptr;
     int i = 1;
 
-    if (direction < 0) {
-        direction = direction;
-    }
-
-
     do {
         auto tileTemp1 = getTileAt((int) x, (int) y + (direction * i));
         auto tileTemp2 = getTileAt((int) x + 1, (int) y + (direction * i));
@@ -242,10 +237,6 @@ Tile *Map::shouldStopAtTileNearY(float velocityY, float x, float y) {
         }
         i++;
     } while (i <= abs((int) velocityY) + 1);
-
-    if (tile) {
-        tile = tile;
-    }
 
     return tile;
 }
