@@ -126,15 +126,7 @@ void Map::placePalette(glm::vec3 &newTilePos) {
     Tile tile{};
     tile.x = newTilePos.x; // FIXME HM, her kan det bli overlapping av tiles.
     tile.y = newTilePos.y;
-    if (selectedSprite == 0) {
-        tile.pointerToSprite = getTileIndex(0, tile.x, tile.y);
-    }
-    else if (selectedSprite == 16) {
-        tile.pointerToSprite = getTileIndex(1, tile.x, tile.y);
-    }
-    else {
-        tile.pointerToSprite = selectedSprite;
-    }
+    tile.pointerToSprite = getTileIndex(floor(selectedSprite / 16), tile.x, tile.y);
     mapOfTiles.push_back(tile);
 }
 
@@ -143,6 +135,8 @@ void Map::removePalette(glm::vec3 &newTilePos) {
         auto tile = mapOfTiles.at(i);
         if (tile.x == newTilePos.x && tile.y == newTilePos.y) {
             mapOfTiles.erase(mapOfTiles.begin() + i);
+            int pallete = floor(tile.pointerToSprite / 16);
+            updateTileIndex(pallete, tile.x, tile.y);
         }
     }
 }
@@ -152,26 +146,78 @@ int Map::getTileIndex(int pal, int x, int y) {
     Tile *adjacentTile;
     adjacentTile = getTileAt(x, y-1);
     if (adjacentTile) {
-        tileIndex += 1;
-        adjacentTile->pointerToSprite += 8;
+        int adjacentPal = floor(adjacentTile->pointerToSprite / 16);
+        if (adjacentPal != 2 || adjacentPal == pal) {
+            tileIndex += 1;
+        }
+        if (adjacentPal == pal || pal != 2) {
+            adjacentTile->pointerToSprite += 8;
+        }
     }
     adjacentTile = getTileAt(x+1, y);
     if (adjacentTile) {
-        tileIndex += 2;
-        adjacentTile->pointerToSprite += 4;
+        int adjacentPal = floor(adjacentTile->pointerToSprite / 16);
+        if (adjacentPal != 2 || adjacentPal == pal) {
+            tileIndex += 2;
+        }
+        if (adjacentPal == pal || pal != 2) {
+            adjacentTile->pointerToSprite += 4;
+        }
     }
     adjacentTile = getTileAt(x-1, y);
     if (adjacentTile) {
-        tileIndex += 4;
-        adjacentTile->pointerToSprite += 2;
+        int adjacentPal = floor(adjacentTile->pointerToSprite / 16);
+        if (adjacentPal != 2 || adjacentPal == pal) {
+            tileIndex += 4;
+        }
+        if (adjacentPal == pal || pal != 2) {
+            adjacentTile->pointerToSprite += 2;
+        }
     }
     adjacentTile = getTileAt(x, y+1);
     if (adjacentTile) {
-        tileIndex += 8;
-        adjacentTile->pointerToSprite += 1;
+        int adjacentPal = floor(adjacentTile->pointerToSprite / 16);
+        if (adjacentPal != 2 || adjacentPal == pal) {
+            tileIndex += 8;
+        }
+        if (adjacentPal == pal || pal != 2) {
+            adjacentTile->pointerToSprite += 1;
+        }
     }
     tileIndex += pal * 16;
     return tileIndex;
+}
+
+void Map::updateTileIndex(int pal, int x, int y) {
+    Tile* adjacentTile;
+    adjacentTile = getTileAt(x, y-1);
+    if (adjacentTile) {
+        int adjacentPal = adjacentTile->pointerToSprite / 16;
+        if (pal != 2 || adjacentPal == pal) {
+            adjacentTile->pointerToSprite -= 8;
+        }
+    }
+    adjacentTile = getTileAt(x + 1, y);
+    if (adjacentTile) {
+        int adjacentPal = adjacentTile->pointerToSprite / 16;
+        if (pal != 2 || adjacentPal == pal) {
+            adjacentTile->pointerToSprite -= 4;
+        }
+    }
+    adjacentTile = getTileAt(x - 1, y);
+    if (adjacentTile) {
+        int adjacentPal = adjacentTile->pointerToSprite / 16;
+        if (pal != 2 || adjacentPal == pal) {
+            adjacentTile->pointerToSprite -= 2;
+        }
+    }
+    adjacentTile = getTileAt(x, y + 1);
+    if (adjacentTile) {
+        int adjacentPal = adjacentTile->pointerToSprite / 16;
+        if (pal != 2 || adjacentPal == pal) {
+            adjacentTile->pointerToSprite -= 1;
+        }
+    }
 }
 
 void Map::render(Camera &camera, Shader &shader) {
