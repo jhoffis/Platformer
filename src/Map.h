@@ -12,10 +12,10 @@ enum TileType {
 };
 
 struct Tile {
-    TileType tileType{};
-    int x{}, y{}, frames{};
-    unsigned int pointerToSprite{};
-    double selectedSprite = 0;
+    TileType tileType = NORMAL;
+    int x = 0, y = 0;
+    unsigned int pointerToSprite = 0, frames = 1;
+    double selectedSprite = 0.0;
 };
 
 struct Map {

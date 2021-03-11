@@ -49,10 +49,10 @@ void Player::tick(double delta) {
 
     Tile *stopX = map.shouldStopAtTileNearX(velocityX, x, y);
     if (stopX) {
-        if (stopX->x < x && left) {
+        if (stopX->x < x) { // && left) {
             x = stopX->x + 1;
         } else if (right) {
-            if (stopX->x > x + 1.0f)
+            if (stopX->x < x + 1.0f)
                 x = stopX->x - 1;
             else
                 x = wishX;
