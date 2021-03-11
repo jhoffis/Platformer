@@ -1,5 +1,6 @@
 #include <src/engine/utils/Timer.h>
 #include "src/Player.h"
+#include "src/Audio.cpp"
 
 
 //void processInput(GLFWwindow *window)
@@ -11,6 +12,16 @@
 
 int main() {
     // Setup
+    const char *audioSetupError = Audio::setup();
+    if (audioSetupError) {
+        std::cerr << audioSetupError << std::endl;
+        return 1;
+    } else {
+        delete[] audioSetupError;
+    }
+
+    Audio::loadSound("jump.wav");
+
     Window window(false, false);
     spriteUpdateTileSize();
     static Camera camera;
@@ -155,6 +166,7 @@ int main() {
 
     shader.destroy();
     map.destroy();
+    Audio::destroy();
 
     return 0;
 }

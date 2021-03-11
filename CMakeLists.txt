@@ -22,23 +22,42 @@ add_executable(${PROJECT_NAME} src/main/Game.cpp
                                 #src/scenes/adt/NkContext.cpp src/scenes/adt/NkContext.h 
                                 #src/audio/AudioRemote.h
         #src/scenes/regular/TestScene.cpp src/scenes/regular/TestScene.h)
-        src/Sprite.cpp src/Sprite.h src/Shader.h src/Shader.cpp src/engine/io/ResourceLoader.h src/engine/io/ResourceLoader.cpp src/Camera.h src/Map.cpp src/Map.h src/Player.cpp src/Player.h)
+        src/Sprite.cpp src/Sprite.h src/Shader.h src/Shader.cpp src/engine/io/ResourceLoader.h src/engine/io/ResourceLoader.cpp src/Camera.h src/Map.cpp src/Map.h src/Player.cpp src/Player.h src/Audio.cpp)
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 include_directories( ${OPENGL_INCLUDE_DIRS} )
 add_dependencies(${PROJECT_NAME} OpenGL::GL)
 
+add_subdirectory (${CMAKE_CURRENT_SOURCE_DIR}/Libraries/openal-soft)
+
+add_subdirectory (${CMAKE_CURRENT_SOURCE_DIR}/Libraries/libsndfile)
+#find_package(libsndfile REQUIRED COMPONENTS OpenGL)
+
+find_library(
+        LIB_SND_FILE
+        NAMES libsndfile-1
+        PATHS ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/libsndfile/lib/win_cb)
+
+target_link_libraries(
+        ${PROJECT_NAME}
+        ${LIB_SND_FILE})
+
 add_subdirectory (${CMAKE_CURRENT_SOURCE_DIR}/Libraries/glm)
-target_link_libraries(${PROJECT_NAME} glm::glm)
 
 add_subdirectory (${CMAKE_CURRENT_SOURCE_DIR}/Libraries/glfw)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Libraries/glfw/include)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Libraries/glm)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Libraries/stb)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Libraries/libsndfile/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Libraries/Nuklear)
+
+#target_link_directories(${CMAKE_CURRENT_SOURCE_DIR}/Libraries/libsndfile/lib/win_cb)
 
 target_link_libraries(${PROJECT_NAME}
         OpenGL::GL
+        glm::glm
+        OpenAL
+#        libsndfile-1.lib
 #        ${CMAKE_CURRENT_SOURCE_DIR}/glad/glad.h
         glfw)
 
