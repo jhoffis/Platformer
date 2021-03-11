@@ -83,10 +83,10 @@ void Player::tick(double delta) {
 
     // tegning av figur status velging
     // Oppover
-    if (velocityY >= 0.3) {
+    if (velocityY <= -0.2) {
         status = 1;
     // Fall
-    } else if (velocityY <= -0.3) {
+    } else if (velocityY >= 0.2) {
         status = 2;
     // I luften
     } else if (velocityY != 0) {
