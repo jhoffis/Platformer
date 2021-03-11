@@ -7,9 +7,15 @@
 #include <vector>
 #include "Sprite.h"
 
+enum TileType {
+    NORMAL, SPIKE, FINISH
+};
+
 struct Tile {
-    int x, y;
-    unsigned int pointerToSprite;
+    TileType tileType{};
+    int x{}, y{}, frames{};
+    unsigned int pointerToSprite{};
+    double selectedSprite = 0;
 };
 
 struct Map {

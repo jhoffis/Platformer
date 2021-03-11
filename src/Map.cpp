@@ -17,7 +17,7 @@ void Map::load() {
 
 // Use a while loop together with the getline() function to read the file line by line
     while (getline (mapFile, tileTextLine)) {
-        int tileArr[3];
+        int tileArr[5];
         int i = 0;
         int n = 0;
         int digits[4];
@@ -50,6 +50,8 @@ void Map::load() {
         tile.x = tileArr[0];
         tile.y = tileArr[1];
         tile.pointerToSprite = tileArr[2];
+        tile.tileType = static_cast<TileType>(tileArr[3]);
+        tile.frames = tileArr[4];
 
         mapOfTiles.push_back(tile);
     }
@@ -63,7 +65,7 @@ void Map::save() {
     mapFile.open(mapFilename, std::ofstream::out | std::ofstream::trunc);
 
     for (auto tile : mapOfTiles) {
-        mapFile << tile.x << 'x' << tile.y << 'x' << tile.pointerToSprite << ';' << std::endl;
+        mapFile << tile.x << 'x' << tile.y << 'x' << tile.pointerToSprite << 'x' << static_cast<unsigned int>(tile.tileType) << 'x' << tile.frames << ';' << std::endl;
     }
 
     mapFile.close();
