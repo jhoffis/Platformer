@@ -32,7 +32,7 @@ struct Player {
 
     void create(const char *imgPath, float tilemapPixelSize);
     void tick(double delta);
-    void render(Camera &camera, Shader &shader);
+    void render(Camera::Cam &camera, Shader &shader);
 
     void jump() {
         jumping = true;

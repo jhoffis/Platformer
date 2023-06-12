@@ -100,7 +100,7 @@ void Player::tick(double delta) {
     }
 }
 
-void Player::render(Camera &camera, Shader &shader) {
+void Player::render(Camera::Cam &camera, Shader &shader) {
     int realSelectedSprite = 0;
     switch (status) {
         // Stillestående
@@ -125,5 +125,5 @@ void Player::render(Camera &camera, Shader &shader) {
         break;
     }
 
-    sprites.at(realSelectedSprite).render(x, y, camera.pos, shader, flipDirectionX);
+    sprites.at(realSelectedSprite).render(x, y, camera.position, shader, flipDirectionX);
 }

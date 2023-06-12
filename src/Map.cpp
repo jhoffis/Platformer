@@ -90,7 +90,7 @@ void Map::create(const char *imgPath, float tilemapPixelSize) {
     width = w;
     height = h;
 
-    palettePos = glm::vec3(Sprite::realTileWidth / 2.0f, Sprite::realTileHeight / 2.0f, 0);
+    palettePos = Math::Vec3(Sprite::realTileWidth / 2.0f, Sprite::realTileHeight / 2.0f, 0);
 
     load();
 }
@@ -119,7 +119,7 @@ bool Map::selectPalette(int button, int mX, int mY) {
     return false;
 }
 
-void Map::placePalette(glm::vec3 &newTilePos) {
+void Map::placePalette(Math::Vec3 &newTilePos) {
     if (selectedSprite < 0 || getTileAt(newTilePos.x, newTilePos.y))
         return;
 
@@ -130,7 +130,7 @@ void Map::placePalette(glm::vec3 &newTilePos) {
     mapOfTiles.push_back(tile);
 }
 
-void Map::removePalette(glm::vec3 &newTilePos) {
+void Map::removePalette(Math::Vec3 &newTilePos) {
     for (int i = 0; i < mapOfTiles.size(); i++) {
         auto tile = mapOfTiles.at(i);
         if (tile.x == newTilePos.x && tile.y == newTilePos.y) {
@@ -220,7 +220,7 @@ void Map::updateTileIndex(int pal, int x, int y) {
     }
 }
 
-void Map::render(Camera &camera, Shader &shader) {
+void Map::render(Camera::Cam &camera, Shader &shader) {
     if (editMode) {
         int n = 0;
         for (int i = 0; i < palette.size(); i += 16) {
@@ -229,7 +229,7 @@ void Map::render(Camera &camera, Shader &shader) {
         }
     }
     for (auto tile : mapOfTiles) {
-        palette.at(tile.pointerToSprite).render(tile.x, tile.y, camera.pos, shader, false);
+        palette.at(tile.pointerToSprite).render(tile.x, tile.y, camera.position, shader, false);
     }
 }
 

@@ -53,7 +53,7 @@ Window::Window(bool fullscreen, bool vsync) {
 
     glfwDefaultWindowHints();
     glfwWindowHint(GLFW_VISIBLE, true);
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
     glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -219,7 +219,7 @@ void Window::setFullscreen(bool fullscreen) {
 }
 
 void Window::updateWithinWindow(int currWidth) {
-    int client_width = currWidth / 1.25f;
+    int client_width = currWidth / 3.0f;
 
     const int incVal = 64;
     int foundIndex;

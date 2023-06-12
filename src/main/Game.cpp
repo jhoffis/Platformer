@@ -13,7 +13,7 @@ int main() {
     // Setup
     Window window(false, false);
     spriteUpdateTileSize();
-    static Camera camera;
+    static Camera::Cam camera{};
     //nk_init_fixed(&ctx, calloc(1, MAX_MEMORY), MAX_MEMORY, &font);
 
     map.create("GrassTiles.png", 24.0f);
@@ -49,16 +49,16 @@ int main() {
              */
             switch (key) {
                 case GLFW_KEY_UP:
-                    camera.pos.y += 0.1;
+                    camera.position.y += 0.1;
                     break;
                 case GLFW_KEY_DOWN:
-                    camera.pos.y -= 0.1;
+                    camera.position.y -= 0.1;
                     break;
                 case GLFW_KEY_LEFT:
-                    camera.pos.x += 0.1;
+                    camera.position.x += 0.1;
                     break;
                 case GLFW_KEY_RIGHT:
-                    camera.pos.x -= 0.1;
+                    camera.position.x -= 0.1;
                     break;
             }
         } else {
@@ -97,7 +97,7 @@ int main() {
        if (action != GLFW_RELEASE) {
 
            if (editMode && !map.selectPalette(button, mX, mY)) {
-               auto pos = screenCoordToTilePos(mX, mY, camera.pos);
+               auto pos = screenCoordToTilePos(mX, mY, camera.position);
                switch (button) {
                    case GLFW_MOUSE_BUTTON_LEFT:
                        map.placePalette(pos);
@@ -143,14 +143,16 @@ int main() {
                 map.palette.at(map.selectedSprite).render(mX, mY, shader, false);
         } else {
             auto playerPos = realTilePos(player.x, player.y);
-            camera.pos.x = 1.0 - playerPos.x - Sprite::realTileWidth / 2.0;
-            camera.pos.y = 1.0 - playerPos.y - Sprite::realTileHeight / 2.0;
+            camera.position.x = 1.0 - playerPos.x - Sprite::realTileWidth / 2.0;
+            camera.position.y = 1.0 - playerPos.y - Sprite::realTileHeight / 2.0;
         }
 
         player.render(camera, shader);
 
         // Render end
         glfwSwapBuffers(window.getWindow());
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
     shader.destroy();

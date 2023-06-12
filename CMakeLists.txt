@@ -1,61 +1,62 @@
 ﻿# CMakeList.txt : Top-level CMake project file, do global configuration
 # and include sub-projects here.
 #
-cmake_minimum_required (VERSION 3.16)
+cmake_minimum_required(VERSION 3.16)
 
-project ("Platformer")
+project("Platformer")
 set(CMAKE_CXX_STANDARD 20)
 
 file(COPY ${CMAKE_SOURCE_DIR}/res DESTINATION ${PROJECT_BINARY_DIR})
 
 # Include sub-projects.
-add_executable(${PROJECT_NAME} src/main/Game.cpp
+add_executable(${PROJECT_NAME}
+        src/main/Game.cpp
         src/glad.c
-                                src/engine/io/Window.h src/engine/io/Window.cpp 
-                                src/engine/utils/Timer.h src/engine/utils/Timer.cpp 
-                                #src/scenes/SceneHandler.cpp src/scenes/SceneHandler.h 
-                                #src/scenes/adt/ISceneManipulator.h 
-                                #src/scenes/SceneEnvir.cpp src/scenes/SceneEnvir.h
-                               # src/scenes/Scenes.h 
-                                #src/engine/graphics/Renderer.cpp src/engine/graphics/Renderer.h 
-                                src/engine/graphics/Camera.cpp src/engine/graphics/Camera.h 
-                                #src/scenes/adt/NkContext.cpp src/scenes/adt/NkContext.h 
-                                #src/audio/AudioRemote.h
-        #src/scenes/regular/TestScene.cpp src/scenes/regular/TestScene.h)
-        src/Sprite.cpp src/Sprite.h src/Shader.h src/Shader.cpp src/engine/io/ResourceLoader.h src/engine/io/ResourceLoader.cpp src/Camera.h src/Map.cpp src/Map.h src/Player.cpp src/Player.h)
+        src/engine/io/Window.h
+        src/engine/io/Window.cpp
+        src/engine/utils/Timer.h
+        src/engine/utils/Timer.cpp
+        src/Sprite.cpp
+        src/Sprite.h
+        src/Shader.h
+        src/Shader.cpp
+        src/engine/io/ResourceLoader.h
+        src/engine/io/ResourceLoader.cpp
+        src/Map.cpp
+        src/Map.h
+        src/Player.cpp
+        src/Player.h
+        )
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)
-include_directories( ${OPENGL_INCLUDE_DIRS} )
+include_directories(${OPENGL_INCLUDE_DIRS})
 add_dependencies(${PROJECT_NAME} OpenGL::GL)
 
-add_subdirectory (${CMAKE_CURRENT_SOURCE_DIR}/Libraries/glm)
-target_link_libraries(${PROJECT_NAME} glm::glm)
-
-add_subdirectory (${CMAKE_CURRENT_SOURCE_DIR}/Libraries/glfw)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Libraries/glfw)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Libraries/glfw/include)
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Libraries/glm)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Libraries/stb)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Libraries/Nuklear)
 
 target_link_libraries(${PROJECT_NAME}
         OpenGL::GL
-#        ${CMAKE_CURRENT_SOURCE_DIR}/glad/glad.h
+        #        ${CMAKE_CURRENT_SOURCE_DIR}/glad/glad.h
         glfw)
-
-
-add_library(nuklear STATIC "${CMAKE_CURRENT_SOURCE_DIR}/Libraries/Nuklear/nuklear.c")
-target_compile_definitions(nuklear PUBLIC
-        NK_INCLUDE_FIXED_TYPES
-        NK_INCLUDE_STANDARD_IO
-        NK_INCLUDE_DEFAULT_ALLOCATOR
-        NK_INCLUDE_VERTEX_BUFFER_OUTPUT
-        NK_INCLUDE_FONT_BAKING
-        NK_KEYSTATE_BASED_INPUT
-        )
-set_target_properties(nuklear PROPERTIES LINKER_LANGUAGE C)
 
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-#set(CMAKE_AUTOGEN_VERBOSE ON)
-#set(CMAKE_VERBOSE_MAKEFILE ON)
+# Change this to false if you want to disable warnings_as_errors in developer mode
+set(OPT_WARNINGS_AS_ERRORS_DEVELOPER_DEFAULT TRUE)
+if (MSVC)
+    # warning level 4 and all warnings as errors
+    add_compile_options(/W4 /WX)
+else ()
+    # lots of warnings and all warnings as errors
+    add_compile_options(-Wall -Wextra -pedantic -Werror)
+endif ()
+
+# Experience shows that explicit package naming can help make it easier to sort
+# out potential ABI related issues before they start, while helping you
+# track a build to a specific GIT SHA
+set(CPACK_PACKAGE_FILE_NAME
+        "${CMAKE_PROJECT_NAME}-${CMAKE_PROJECT_VERSION}-${GIT_SHORT_SHA}-${CMAKE_SYSTEM_NAME}-${CMAKE_BUILD_TYPE}-${CMAKE_CXX_COMPILER_ID}-${CMAKE_CXX_COMPILER_VERSION}"
+        )

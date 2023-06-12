@@ -12,6 +12,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include "math/mat.h"
 
 
 class Shader
@@ -43,11 +44,11 @@ public:
         glUniform1f(glGetUniformLocation(ID, location), value);
     }
 
-    void uniformMatrix4(auto mat4f, const char *location) {
+    void uniformMatrix4(Math::Mat mat4f, const char *location) const {
         int glslLocation = glGetUniformLocation(ID, location);
         if (glslLocation == -1)
             std::cout << "ERROR SHADER: " << location << std::endl;
-        glUniformMatrix4fv(glslLocation, 1, GL_FALSE, mat4f);
+        glUniformMatrix4fv(glslLocation, 1, GL_FALSE, mat4f.elements);
     }
 };
 
