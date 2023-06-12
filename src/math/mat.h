@@ -22,10 +22,12 @@ namespace Math {
             elements[y*SIZE + x] = value;
         }
 
-        constexpr void setTranslate(Math::Vec3 vector) {
-            set(3, 0, (float) vector.x);
-            set(3, 1, (float) vector.y);
-            set(3, 2, (float) vector.z);
+        constexpr void translate(Math::Vec3 vector) {
+            Mat translate{};
+            translate.set(3, 0, (float) vector.x);
+            translate.set(3, 1, (float) vector.y);
+            translate.set(3, 2, (float) vector.z);
+            this *= translate;
         }
 
         constexpr void identity() {

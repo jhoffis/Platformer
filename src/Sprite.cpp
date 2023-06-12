@@ -26,9 +26,9 @@ void Sprite::render(float tileX, float tileY, Math::Vec3 &viewPos, Shader &shade
 
     auto modelPos = realTilePos(tileX, tileY);
     auto modelMat = Math::Mat{};
-    modelMat.setTranslate(Math::Vec3(modelPos.x, -modelPos.y, 0));
+    modelMat.translate(Math::Vec3(modelPos.x, -modelPos.y, 0));
     auto viewMat = Math::Mat{};
-    viewMat.setTranslate(Math::Vec3(viewPos.x, -viewPos.y, 0));
+    viewMat.translate(Math::Vec3(viewPos.x, -viewPos.y, 0));
 
     shader.uniformMatrix4(modelMat, "model");
     shader.uniformMatrix4(viewMat, "view");
@@ -44,8 +44,8 @@ void Sprite::render(int mX, int mY, Shader &shader, bool flipSideways) const {
 
     shader.uniformMatrix4(Math::Mat{}, "model");
     auto viewMat = Math::Mat{};
-    viewMat.setTranslate(Math::Vec3(mX / Window::WIDTH * 2.0f - Sprite::realTileWidth / 2.0f,
-                                    -mY / Window::HEIGHT * 2.0f + Sprite::realTileHeight / 2.0f, 0));
+    viewMat.translate(Math::Vec3(mX / Window::WIDTH * 2.0f - Sprite::realTileWidth / 2.0f,
+                                 -mY / Window::HEIGHT * 2.0f + Sprite::realTileHeight / 2.0f, 0));
     shader.uniformMatrix4(viewMat, "view");
     shader.uniformBool(flipSideways, "flipSideways");
 
